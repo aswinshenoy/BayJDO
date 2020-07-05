@@ -1,11 +1,13 @@
 {
   "name": "Bayjdo",
   "short_name": "Bayjdo",
-  "theme_color": "#FFEA00",
+  "description": "Fast, Simple & Secure Way to Transfer Files between devices",
+  "theme_color": "#317EFB",
   "background_color": "#0091EA",
   "display": "standalone",
   "orientation": "portrait",
-  "Scope": "/",
+  "lang": "en-US",
+  "scope": "/",
   "start_url": "/",
   "icons": [
     {
@@ -48,6 +50,5 @@
       "sizes": "512x512",
       "type": "image/png"
     }
-  ],
-  "splash_pages": null
+  ]
 }

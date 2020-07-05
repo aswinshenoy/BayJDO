@@ -48,6 +48,8 @@ export default ({ filesReceived, filesSent }) => {
     const filesSentCount = filesSent && filesSent.length > 0 ? filesSent.length : 0;
     const filesReceivedCount = filesReceived && filesReceived.length > 0 ? filesReceived.length : 0;
 
+    const sortFiles = (files) => files.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
+
     return <FileSharedTabs>
         <TabSelectorWrap>
             <button className={!showFilesSent?'active':null} onClick={() => setShowFilesSent(false)}>
@@ -59,8 +61,8 @@ export default ({ filesReceived, filesSent }) => {
         </TabSelectorWrap>
         <TabContainer>
             { showFilesSent ?
-                <FileLister labels={{ noFilesShared: "No files sent." }} files={filesSent.reverse()} /> :
-                <FileLister showSaveButton labels={{ noFilesShared: "No files received." }} files={filesReceived.reverse()} />
+                <FileLister labels={{ noFilesShared: "No files sent." }} files={sortFiles(filesSent)} /> :
+                <FileLister showSaveButton labels={{ noFilesShared: "No files received." }} files={sortFiles(filesReceived)} />
             }
         </TabContainer>
 

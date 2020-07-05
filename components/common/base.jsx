@@ -19,7 +19,6 @@ const seoTags = {
 
 const Base = ({ children, meta }) => {
 
-
     const title = `${meta && meta.title ? `${meta.title} |` : '' } ${seoTags.siteName} - ${seoTags.tagLine}`;
 
     const theme = {
@@ -36,6 +35,7 @@ const Base = ({ children, meta }) => {
         }
     };
 
+    const GoogleAnalyticsID = 'UA-171591742-1';
 
     return <React.Fragment>
         <Head>
@@ -46,14 +46,26 @@ const Base = ({ children, meta }) => {
             <meta name="description" content={meta && meta.description ? meta.description : seoTags.description} />
             <meta name="twitter:title" content={title} />
             <meta property="og:title" content={title} />
-            {   meta && meta.image && <meta property="og:image" content={meta.image} /> }
             <meta name="viewport" content="width=device-width, minimum-scale=1, shrink-to-fit=no, initial-scale=1, user-scalable=no" />
             <link rel="manifest" href="/manifest.json" />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='16x16' />
             <link href='/images/icons/icon-32x32.png' rel='icon' type='image/png' sizes='32x32' />
+            <link href='/images/icons/icon-72x72.png' rel='icon' type='image/png' sizes='72x72' />
+            <link href='/images/icons/icon-96x96.png' rel='icon' type='image/png' sizes='96x96' />
+            <link href='/images/icons/icon-192x192.png' rel='icon' type='image/png' sizes='192x192' />
             <link rel='apple-touch-icon' href='/images/icons/icon-512x512.png' />
-            <script async src="https://www.googletagmanager.com/gtag/js?id=UA-167849096-1"></script>
-            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'UA-167849096-1');`}} />
+            <meta name="mobile-web-app-capable" content="yes" />
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+            <meta name="msapplication-TileColor" content="#FFFFFF" />
+            <meta name="msapplication-TileImage" content="/images/icons/icon-144x144.png" />
+            <meta name="msapplication-starturl" content="/" />
+            {   meta && meta.image && <meta property="og:image" content={meta.image} /> }
+            {   GoogleAnalyticsID &&
+                <React.Fragment>
+                    <script async src={`https://www.googletagmanager.com/gtag/js?id=${GoogleAnalyticsID}`} />
+                    <script dangerouslySetInnerHTML={{ __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GoogleAnalyticsID}');`}} />
+                </React.Fragment>
+            }
         </Head>
         <div className="app light dark-mode animated fadeIn">
             <ThemeProvider theme={theme}>

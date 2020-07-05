@@ -32,7 +32,7 @@ export default ({ onConnect }) => {
 
     const [peerCode, setPeerCode] = useState('');
 
-    return <FormWrapper onSubmit={() => onConnect(peerCode)}>
+    return <FormWrapper onSubmit={() => onConnect(peerCode.toLowerCase())}>
         <div className="p-3">
             <label className="d-none text-left font-weight-bold pb-1">Enter Peer Code: </label>
             <input

@@ -4,12 +4,20 @@ import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generato
 
 import { getChunksFromFile, getFileFromChunks } from '../functions';
 
-const localConfig = {
+const prodConfig = {
     host: '/',
     secure: true,
     port: 443,
     path: '/signaller',
     debug: 1
+};
+
+const localConfig = {
+    host: '192.168.43.88',
+    secure: false,
+    port: 9000,
+    path: '/myapp',
+    debug: 0
 };
 
 const nameGeneratorConfig = {
@@ -35,7 +43,7 @@ export default function usePeer() {
     useEffect(() => {
         import('peerjs').then(() => {
             const myName = uniqueNamesGenerator(nameGeneratorConfig);
-            const peer =  myself ? myself : new Peer(myName, localConfig);
+            const peer =  myself ? myself : new Peer(myName, prodConfig);
 
             peer.on('open', () => {
                 setMyself(peer);
@@ -89,15 +97,16 @@ export default function usePeer() {
 
     const sendFile = async ({ id, file, url, meta }) => {
         const chunks = await getChunksFromFile(file);
-
+        setFileChunkIndex(null);
+        setData(null);
         setFileToSend({
             id,
+            url,
             chunks,
             meta
         });
 
         // Send File Meta first
-        // @todo include support for more file meta
         myConnection.send({
             id,
             type: "file_transfer_start",
@@ -112,9 +121,7 @@ export default function usePeer() {
     };
 
     useEffect(() => {
-        console.log(fileChunkIndex);
         if (fileChunkIndex !== null) {
-            console.log('send chunk', fileChunkIndex);
             myConnection.send({
                 id: fileToSend.id,
                 type: "file_transfer_chunk",
@@ -129,7 +136,8 @@ export default function usePeer() {
                     status: {
                         progress: 100,
                         state: 'sent',
-                    }
+                    },
+                    timestamp: new Date().getTime(),
                 });
             else
                 setData({
@@ -148,7 +156,6 @@ export default function usePeer() {
 
     const [hasReceivedFile, setReceivedFile] = useState(false);
     useEffect(() => {
-        console.log('received file', file);
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
             const resp = getFileFromChunks(file.chunks, file.meta);
@@ -158,7 +165,8 @@ export default function usePeer() {
                 status: {
                     progress: 100,
                     state: 'received',
-                }
+                },
+                timestamp: new Date().getTime(),
             });
         }
     }, [hasReceivedFile]);
@@ -187,7 +195,6 @@ export default function usePeer() {
                 }
             });
             setReceiveIndex(receiveIndex+1);
-            console.log(file.totalChunks);
             if(receiveIndex+1 < file.totalChunks)
                 myConnection.send({
                     id: file.id,
@@ -197,7 +204,6 @@ export default function usePeer() {
             else {
                 setReceivedFile(true);
             }
-            console.log('requested', receiveIndex + 1);
         } else if(chunk === false) {
             myConnection.send({
                 id: file.id,
@@ -211,6 +217,7 @@ export default function usePeer() {
     const handleReceiveData = (data) => {
         if(data && data.type)
         {
+            // new file
             if(data.type === 'file_transfer_start')
             {
                 setReceivedFile(false);
@@ -225,16 +232,13 @@ export default function usePeer() {
                 });
                 setReceiveIndex(0);
                 setChunk(false);
-            } else if(data.type === 'file_chunk_request')
-            {
-                console.log('request got', data.index);
+            }
+            // request for the next chunk
+            else if(data.type === 'file_chunk_request')
                 setFileChunkIndex(data.index);
-            }
+            // a new (/next) chunk
             else if(data.type === 'file_transfer_chunk')
-            {
-               console.log('received chunk', data.index);
                setChunk(data);
-            }
         }
     };
 

@@ -4,6 +4,7 @@ import {usePeer} from "../../hooks";
 
 import { LandingPage } from '../landing';
 import { FileShare } from '../share';
+import {Credits} from "../common";
 
 export default ({ }) => {
     const [
@@ -28,23 +29,18 @@ export default ({ }) => {
             {
                 setFilesSent(filesSent.length > 0 ? [...filesSent, data] : [data]);
                 setCurrentFile(null);
-            } else {
-                setCurrentFile(data);
-            }
+            } else setCurrentFile(data);
         } else if (data && data.userRole && data.userRole === 'receiver')
         {
             if(data.status.state === 'received')
             {
                 setFilesReceived(filesReceived.length > 0 ? [...filesReceived, data] : [data]);
                 setCurrentFile(null);
-            } else {
-                setCurrentFile(data);
-            }
+            } else setCurrentFile(data);
         }
     }, [data]);
 
     const handleUpload = (file) => {
-        console.log(file);
         setCurrentFile(currentFile);
         sendFile(file)
     };
@@ -72,10 +68,23 @@ export default ({ }) => {
     </div> :
     <div className="min-vh-100 w-100 d-flex align-items-center justify-content-center">
         <div>
+            <div className="fixed-top my-3 text-center">
+                <div className="d-inline-block bg-white p-2 rounded">
+                    <img
+                        className="w-100 p-2 rounded"
+                        style={{ width: '50vw', maxWidth: '220px' }}
+                        alt="bayjdo_logo"
+                        src={require('../../images/brand/logo_color.png')}
+                    />
+                </div>
+            </div>
             <div className="d-flex justify-content-center mb-2">
                 <i className="gg-spinner" />
             </div>
-            <h4>Establishing Connection with RTC Server</h4>
+            <h4>Establishing Connection with Server</h4>
+            <div className="my-3 fixed-bottom text-center">
+                <Credits />
+            </div>
         </div>
     </div>;
 

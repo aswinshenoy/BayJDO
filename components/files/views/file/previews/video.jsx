@@ -36,7 +36,7 @@ export default ({ url, meta: { type, name, }, isTransferred }) => {
         <div className="col-3 d-flex align-items-center justify-content-center px-1">
             <img src={getFileIconFromMIME(type)} alt="file" />
         </div>
-        <div className="col-9 px-1">
+        <div className="col-9 d-flex align-items-center px-1">
             <div className="font-weight-bold overflow-hidden">{name}</div>
             {  isTransferred &&
                 <button

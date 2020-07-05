@@ -28,7 +28,7 @@ export default ({
     useBeforeunload(event => event.preventDefault());
 
     const handleOnSelect = (files) => {
-        setFilesQueued(filesSent.length > 0 ? [...filesSent, ...files] : [...files])
+        setFilesQueued(filesQueued.length > 0 ? [...filesSent, ...files] : [...files])
     };
 
     useEffect(() => {
@@ -42,13 +42,22 @@ export default ({
         }
     }, [filesQueued]);
 
+    useEffect( () => {
+        if(currentFile === null && filesQueued.length > 0)
+        {
+            onSend(filesQueued[0]);
+            setFilesQueued(filesQueued.splice(1))
+        }
+    }, [currentFile]);
+
     useEffect(() => {
-        if(filesReceivedProps)
+        if(filesReceivedProps && filesReceivedProps.length !== filesReceived.length)
             setFilesReceived(filesReceivedProps);
     }, [filesReceivedProps]);
 
     useEffect(() => {
-        if(filesSentProps)
+        console.log('update');
+        if(filesSentProps && filesSentProps.length !== filesSent.length)
             setFilesSent(filesSentProps);
     }, [filesSentProps]);
 

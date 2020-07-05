@@ -1,5 +1,4 @@
 export default function getFileFromChunks (chunks, meta) {
-    console.log(meta);
     const blobParts = [];
     chunks.forEach((c) => {
         const b = new Blob([c]);

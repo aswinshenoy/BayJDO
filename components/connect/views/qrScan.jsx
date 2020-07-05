@@ -5,12 +5,11 @@ const QrReader = dynamic(() => import("react-qr-reader"), { ssr: false});
 
 export default ({ onScan }) => {
 
-
     return <div style={{ width: "256px", minWidth: "100%"  }}>
         <QrReader
-            delay="100"
+            delay={500}
             onError={(err) => console.log(err)}
-            onScan={(data) => onScan(data)}
+            onScan={(data) => data ? onScan(data) : null}
         />
     </div>
 

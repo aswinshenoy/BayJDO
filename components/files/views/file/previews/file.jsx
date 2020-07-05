@@ -9,7 +9,7 @@ export default ({ meta: { name, size, type }, }) => {
             <div className="col-3 d-flex align-items-center justify-content-center px-1">
                 <img src={getFileIconFromMIME(type)} alt="file" />
             </div>
-            <div className="col-9 d-flex px-2">
+            <div className="col-9 d-flex align-items-center px-2">
                 <div>
                     <div className="font-weight-bold overflow-hidden">{name}</div>
                 </div>
