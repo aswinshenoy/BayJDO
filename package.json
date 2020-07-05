@@ -5,7 +5,9 @@
   "scripts": {
     "build": "next build",
     "build-analyse": "ANALYZE=true next build",
+    "build-export": "npm run build && npm run export",
     "dev": "next",
+    "export": "next export",
     "start": "next start -p 80",
     "deploy": "next build && next start -p 80"
   },
@@ -45,6 +47,7 @@
     "json-to-graphql-query": "^2.0.0",
     "jwt-decode": "^2.2.0",
     "loadash": "^1.0.0",
+    "music-metadata-browser": "^2.0.6",
     "next": "^9.4.2",
     "next-compose-plugins": "2.2.0",
     "next-offline": "^5.0.0",

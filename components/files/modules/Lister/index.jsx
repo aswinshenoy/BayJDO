@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import FileViewer from '../Viewer';
 
 const EmptyListContainer = styled.div`
-    min-height: 35vh;
+    min-height: 15vh;
     text-align: center;
     display: flex;
     align-items: center;
@@ -15,7 +15,8 @@ const EmptyListContainer = styled.div`
     }
     h4 {
       margin-top: 1rem;
-      font-size: calc(1.35rem + 0.5vw);
+      margin-bottom: 2rem;
+      font-size: calc(1.2rem + 0.5vw);
     }
 `;
 
@@ -23,7 +24,7 @@ const defaultLabels = {
     noFilesShared: 'No Files Shared.'
 };
 
-export default ({ files: filesProp, labels: labelsProp }) => {
+export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
 
     const [files, setFiles] = useState(filesProp);
 
@@ -34,7 +35,7 @@ export default ({ files: filesProp, labels: labelsProp }) => {
     }, [filesProp]);
 
     return typeof files === 'object' && files.length > 0 ? <div>{
-        files.map((f) => <div key={f.id} className="p-2"><FileViewer fileData={f} /></div>)
+        files.map((f) => <div key={f.id} className="p-2"><FileViewer showSaveButton={showSaveButton} fileData={f} /></div>)
     }</div> :
     <EmptyListContainer>
         <div>

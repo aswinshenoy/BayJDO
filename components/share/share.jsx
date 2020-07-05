@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { FileSelector } from "../files/modules";
 
 import { FileSharedViewer, PeerCard } from './views';
-import {Credits} from "../common";
+import { Credits } from "../common";
 
 const ShareWindowContainer = styled.div`
     display: flex;
@@ -13,6 +13,7 @@ const ShareWindowContainer = styled.div`
       max-width: 900px;
     }
 `;
+
 
 export default ({
     myCode, peerCode, currentFile,
@@ -69,8 +70,8 @@ export default ({
         <div className="row mx-0 w-100">
             <div className="col-md-3 bg-white d-flex align-items-center justify-content-center p-2">
                 <img
-                    className="w-100 p-3 rounded"
-                    style={{ maxWidth: '50vw' }}
+                    className="w-100 p-2 rounded"
+                    style={{ maxWidth: '35vw' }}
                     alt="bayjdo_logo"
                     src={require('../../images/brand/logo_color.png')}
                 />

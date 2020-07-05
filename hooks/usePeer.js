@@ -5,11 +5,11 @@ import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generato
 import { getChunksFromFile, getFileFromChunks } from '../functions';
 
 const localConfig = {
-    host: '192.168.43.88',
-    secure: false,
-    port: 9000,
-    path: '/myapp',
-    debug: 0
+    host: '/',
+    secure: true,
+    port: 443,
+    path: '/signaller',
+    debug: 1
 };
 
 const nameGeneratorConfig = {
@@ -87,8 +87,8 @@ export default function usePeer() {
     const [fileToSend, setFileToSend] = useState(null);
     const [fileChunkIndex, setFileChunkIndex] = useState(null);
 
-    const sendFile = ({ id, file, url, meta }) => {
-        const chunks = getChunksFromFile(file);
+    const sendFile = async ({ id, file, url, meta }) => {
+        const chunks = await getChunksFromFile(file);
 
         setFileToSend({
             id,

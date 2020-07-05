@@ -1,13 +1,10 @@
-export default function getChunksFromFile(file, chunkSize = 100) {
-    let chunks = [];
-    let byteIndex = 0;
-    console.log(file);
-
-    for (let i = 0; i < chunkSize; i += 1) {
-        let byteEnd = Math.ceil((file.size / chunkSize) * (i + 1));
-        chunks.push(file.slice(byteIndex, byteEnd));
-        byteIndex += (byteEnd - byteIndex);
-    }
-
-    return chunks;
+export default async function getChunksFromFile(file, chunkSize = 6 * 1024 * 1024) {
+    return await file.arrayBuffer().then((buffer) => {
+        let chunks = [];
+        while(buffer.byteLength) {
+            chunks.push(buffer.slice(0, chunkSize));
+            buffer = buffer.slice(chunkSize, buffer.byteLength);
+        }
+        return chunks;
+    });
 };

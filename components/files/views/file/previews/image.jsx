@@ -1,18 +1,16 @@
 import React from 'react';
 
-export default ({ altText, url }) => {
+export default ({ url, meta: { name, } }) => {
 
     return <div>
-        <div
-            style={{
-                backgroundImage: `url(${url})`,
-                width: '8vh',
-                height: '8vh',
-                maxWidth: '100%',
-                backgroundPosition: 'center',
-                backgroundSize: 'cover'
-            }}
-        />
+        <div className="row mx-0">
+            <div className="col-4 d-flex align-items-center px-1 justify-content-center">
+                <img src={url} alt={name} style={{ maxWidth: 'auto!important', height: '8vh' }} />
+            </div>
+            <div className="col-8 px-1">
+                <div className="font-weight-bold overflow-hidden">{name}</div>
+            </div>
+        </div>
     </div>
 
 };

@@ -51,6 +51,8 @@ export default ({ }) => {
 
     const handleDisconnect = () => {
         cleanUp();
+        setFilesReceived([]);
+        setFilesSent([]);
     };
 
     return myself ? <div>

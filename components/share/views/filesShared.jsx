@@ -32,6 +32,7 @@ const TabSelectorWrap = styled.div`
    }
    .active {
       background-color: #FFD600;
+      font-weight: 600;
       color: black;
    }
 `;
@@ -59,7 +60,7 @@ export default ({ filesReceived, filesSent }) => {
         <TabContainer>
             { showFilesSent ?
                 <FileLister labels={{ noFilesShared: "No files sent." }} files={filesSent.reverse()} /> :
-                <FileLister labels={{ noFilesShared: "No files received." }} files={filesReceived.reverse()} />
+                <FileLister showSaveButton labels={{ noFilesShared: "No files received." }} files={filesReceived.reverse()} />
             }
         </TabContainer>
 
