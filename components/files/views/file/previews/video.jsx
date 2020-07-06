@@ -37,16 +37,18 @@ export default ({ url, meta: { type, name, }, isTransferred }) => {
             <img src={getFileIconFromMIME(type)} alt="file" />
         </div>
         <div className="col-9 d-flex align-items-center px-1">
-            <div className="font-weight-bold overflow-hidden">{name}</div>
-            {  isTransferred &&
-                <button
-                    className="btn btn-outline-primary d-flex align-items-center justify-content-center mt-2 px-2 py-1"
-                    onClick={() => setRenderPlayer(true)}
-                >
-                    <i className="gg-play-button" />
-                    Play Video
-                </button>
-            }
+            <div>
+                <div className="font-weight-bold overflow-hidden">{name}</div>
+                {  isTransferred &&
+                    <button
+                        className="btn btn-outline-primary d-flex align-items-center justify-content-center mt-2 px-2 py-1"
+                        onClick={() => setRenderPlayer(true)}
+                    >
+                        <i className="gg-play-button" />
+                        Play Video
+                    </button>
+                }
+            </div>
         </div>
     </div>
 }

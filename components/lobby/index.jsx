@@ -83,10 +83,14 @@ export default ({ }) => {
             </div>
             <h4>Establishing Connection with Server</h4>
             <p style={{ maxWidth: '400px' }}>
-                We are currently on a trial-run on a light-weight server,
-                and therefore, we have limit on the number of concurrent
-                connections possible. If you face issues, please try again later.
-                We are extremely sorry for the inconvenience.
+                We are currently on a trial-run using a light-weight server,
+                and powered by a third-party web signalling package.
+                Currently, <b>PeerJS which is used for signalling does not support
+                horizontal scaling, & is not enterprise ready</b>, and thus, there is limit
+                on the number of concurrent connections possible as it ought to be from a
+                single server. <b>We have hit a roadblock, & we need some time to write a
+                WebRTC signalling server from scratch for ourselves.</b> If you face issues,
+                please try again later. We are extremely sorry  for the inconvenience.
             </p>
             <div className="my-3 fixed-bottom text-center">
                 <Credits />
