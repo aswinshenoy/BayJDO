@@ -66,7 +66,7 @@ export default ({ }) => {
             <div>Connecting to Peer</div>
         }
     </div> :
-    <div className="min-vh-100 w-100 d-flex align-items-center justify-content-center">
+    <div className="min-vh-100 w-100 d-flex align-items-center justify-content-center text-center">
         <div>
             <div className="fixed-top my-3 text-center">
                 <div className="d-inline-block bg-white p-2 rounded">
@@ -82,6 +82,12 @@ export default ({ }) => {
                 <i className="gg-spinner" />
             </div>
             <h4>Establishing Connection with Server</h4>
+            <p style={{ maxWidth: '400px' }}>
+                We are currently on a trial-run on a light-weight server,
+                and therefore, we have limit on the number of concurrent
+                connections possible. If you face issues, please try again later.
+                We are extremely sorry for the inconvenience.
+            </p>
             <div className="my-3 fixed-bottom text-center">
                 <Credits />
             </div>
