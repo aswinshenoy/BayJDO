@@ -51,51 +51,20 @@ export default ({ }) => {
         setFilesSent([]);
     };
 
-    return myself ? <div>
-        {myPeer === null ? <LandingPage myCode={myself.id} onConnect={(data) => addPeer(data)} /> :
-            isConnected ?
-            <FileShare
-                myCode={myself.id}
-                peerCode={myPeer}
-                currentFile={currentFile}
-                filesReceived={filesReceived}
-                filesSent={filesSent}
-                onSend={handleUpload}
-                onDisconnect={handleDisconnect}
-            /> :
-            <div>Connecting to Peer</div>
-        }
-    </div> :
-    <div className="min-vh-100 w-100 d-flex align-items-center justify-content-center text-center">
-        <div>
-            <div className="fixed-top my-3 text-center">
-                <div className="d-inline-block bg-white p-2 rounded">
-                    <img
-                        className="w-100 p-2 rounded"
-                        style={{ width: '50vw', maxWidth: '220px' }}
-                        alt="bayjdo_logo"
-                        src={require('../../images/brand/logo_color.png')}
-                    />
-                </div>
-            </div>
-            <div className="d-flex justify-content-center mb-2">
-                <i className="gg-spinner" />
-            </div>
-            <h4>Establishing Connection with Server</h4>
-            <p style={{ maxWidth: '400px' }}>
-                We are currently on a trial-run using a light-weight server,
-                and powered by a third-party web signalling package.
-                Currently, <b>PeerJS which is used for signalling does not support
-                horizontal scaling, & is not enterprise ready</b>, and thus, there is limit
-                on the number of concurrent connections possible as it ought to be from a
-                single server. <b>We have hit a roadblock, & we need some time to write a
-                WebRTC signalling server from scratch for ourselves.</b> If you face issues,
-                please try again later. We are extremely sorry  for the inconvenience.
-            </p>
-            <div className="my-3 fixed-bottom text-center">
-                <Credits />
-            </div>
-        </div>
-    </div>;
+    return isConnected && myPeer ?
+    <FileShare
+        myCode={myself.id}
+        peerCode={myPeer}
+        currentFile={currentFile}
+        filesReceived={filesReceived}
+        filesSent={filesSent}
+        onSend={handleUpload}
+        onDisconnect={handleDisconnect}
+    /> :
+    <LandingPage
+        isLoading={!(myself && myself.id)}
+        myCode={myself && myself.id}
+        onConnect={(data) => addPeer(data)}
+    />
 
 }

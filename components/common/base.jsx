@@ -13,8 +13,8 @@ import '../../styles/styles.css';
 
 const seoTags = {
     "siteName": "Bayjdo",
-    "tagLine": "Transfer Files Fast, Simple & Securely, on-the-go with any device",
-    "description": "A Peer-to-Peer File Transfer app that's fast, light-weight, & secure."
+    "tagLine": "Fast, Simple & Secure Peer-To-Peer File Transfer",
+    "description": "Share files between devices right from your browser, without even needing to install an app or creating a dedicated hotspot."
 };
 
 const Base = ({ children, meta }) => {

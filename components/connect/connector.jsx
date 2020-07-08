@@ -69,7 +69,6 @@ export default ({ myCode, onConnect }) => {
                         }
                     </QRBottomBar>
                 </div>
-
             </QRCodeContainer>
         </div>
     </div>;
