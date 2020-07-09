@@ -66,39 +66,53 @@ export default ({ onSelect, queue }) => {
         }
     }, [acceptedFiles]);
 
-    return <FileSelectorWrap>
-        <div {...getRootProps({className: 'dropzone d-none d-md-block'})}>
-            <input {...getInputProps()} />
-            <div className="d-flex align-items-center justify-content-center">
-                <div>
-                    <div className="d-flex justify-content-center">
-                        <button
-                            className="btn btn-primary"
-                            type="button"
-                            onClick={open}
-                        >
-                            Select File(s)
-                        </button>
-                    </div>
-                    <div className="p-2 d-none d-md-block">
-                        <span>You may also drag and drop files here.</span>
-                    </div>
+    const renderMobileSelector =
+    <FooterFileSelector>
+        <button
+            aria-label="Select Files to Send"
+            title="Select Files to Send"
+            className="btn btn-primary shadow"
+            type="button"
+            onClick={open}
+        >
+            Select File(s)
+        </button>
+    </FooterFileSelector>;
+
+    const renderLargeScreenSelector =
+    <div {...getRootProps({className: 'dropzone'})}>
+        <input {...getInputProps()} />
+        <div className="d-flex align-items-center justify-content-center">
+            <div>
+                <div className="d-flex justify-content-center">
+                    <button
+                        aria-label="Select Files to Send"
+                        title="Select Files to Send"
+                        className="btn btn-primary shadow-lg"
+                        type="button"
+                        onClick={open}
+                    >
+                        Select File(s)
+                    </button>
+                </div>
+                <div className="p-2 d-none d-md-block">
+                    <span>You may also drag and drop files here.</span>
                 </div>
             </div>
         </div>
-        <FooterFileSelector className="d-block d-md-none">
-            <button
-                className="btn btn-primary"
-                type="button"
-                onClick={open}
-            >
-                Select File(s)
-            </button>
-        </FooterFileSelector>
+    </div>;
+
+    return <FileSelectorWrap>
+        <div className="d-block d-md-none">
+            {renderMobileSelector}
+        </div>
+        <div className="d-none d-md-block">
+            {renderLargeScreenSelector}
+        </div>
         <div className="mt-md-4">
             <h4 className="p-2 my-2">Queue ({queue && queue.length > 0 ? queue.length : 0})</h4>
             <div className="bg-light rounded p-2">
-                <FileLister files={queue} labels={{ noFilesShared: "No files in Queue" }} />
+                <FileLister files={queue} labels={{ noFilesShared: "No files pending." }} />
             </div>
         </div>
     </FileSelectorWrap>;

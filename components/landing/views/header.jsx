@@ -1,31 +1,14 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { keyframes } from '@emotion/core'
+
+import { Topbar } from "../../common";
 import {PeerConnector} from "../../connect";
 import { PopUp } from "../../ui";
 
 const gradientBg = keyframes`
-  0% {
-    background-position: 50% 0;
-  }
-  
-  100% {
-    background-position: 100% 0;
-  }
-
-`;
-
-const HeaderBar = styled.nav`
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 100%;
-  background-color: rgba(250, 250, 250, 0.9);
-  padding: 0.5rem 0;
-  z-index: 3000;
-  img {
-    max-width: 200px;
-  }
+  0% { background-position: 50% 0; }
+  100% { background-position: 100% 0; }
 `;
 
 const CoverWrapper = styled.section`
@@ -37,7 +20,7 @@ const CoverWrapper = styled.section`
   padding: 2vh 5vw;
   h1 {
     font-weight: 600;
-    font-size: calc(1.5rem + 1.5vmax);
+    font-size: calc(1.5rem + 2vmax);
     max-width: 700px;
     line-height: 1.15;
     background: linear-gradient(to right, #C51162, #304FFE, #00BFA5);
@@ -49,7 +32,7 @@ const CoverWrapper = styled.section`
   }
   h5 {
     max-width: 600px;
-    font-size: calc(1.05rem + 0.5vmax);
+    font-size: calc(1.05rem + 0.8vmax);
   }
 `;
 
@@ -73,18 +56,7 @@ export default ({ myCode, isLoading, onConnect }) => {
     const [showConnector, setShowConnector] = useState(false);
 
     return <React.Fragment>
-    <HeaderBar>
-        <div className="container-lg px-0">
-            <div className="row mx-0">
-                <div className="col-6 col-md-3 px-2">
-                    <img src={require('../../../images/brand/logo_color.png')} alt="logo" />
-                </div>
-                <div className="col-6 col-md-3 px-1">
-
-                </div>
-            </div>
-        </div>
-    </HeaderBar>
+    <Topbar />
     <div className="bg-white" style={{ height: '8vh' }} />
     <CoverWrapper>
         <div>
@@ -114,10 +86,16 @@ export default ({ myCode, isLoading, onConnect }) => {
                                         myCode={myCode}
                                         onConnect={onConnect}
                                     />
+                                    <p className="mt-3 text-center p-4">
+                                        If you face any issue with connecting with your peer, try reloading the pages
+                                        to generate a new code for each of you.
+                                    </p>
                                 </div>
                                 <div className="d-block d-md-none">
                                     <button
-                                        className="btn btn-primary rounded-pill mt-3 font-weight-bold py-3 px-4"
+                                        aria-label="Start Transferring"
+                                        title="Start Transferring"
+                                        className="btn btn-primary rounded-pill shadow-lg mt-5 font-weight-bold p-4"
                                         style={{ fontSize: '1.2rem' }}
                                         onClick={() => setShowConnector(true)}
                                     >
@@ -126,6 +104,8 @@ export default ({ myCode, isLoading, onConnect }) => {
                                 </div>
                                 <StartButtonWrap className="d-block d-md-none">
                                     <button
+                                        aria-label="Start Transferring"
+                                        title="Start Transferring"
                                         className="btn btn-warning py-3 w-100"
                                         onClick={() => setShowConnector(true)}
                                     >
@@ -148,6 +128,10 @@ export default ({ myCode, isLoading, onConnect }) => {
                 myCode={myCode}
                 onConnect={onConnect}
             />
+            <p className="mt-3 text-center p-4">
+                If you face any issue with connecting with your peer, try reloading the pages
+                to generate a new code for each of you.
+            </p>
         </PopUp>
     </CoverWrapper>
     </React.Fragment>

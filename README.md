@@ -1,4 +1,4 @@
-# Bayjdo
+# BayJDO
 #### A Fast, Simple & Secure Way to Transfer Files between Devices
 ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/aswinshenoy/bayjdo?include_prereleases)
 ![GitHub](https://img.shields.io/github/license/aswinshenoy/bayjdo)
@@ -6,9 +6,27 @@
 
 ![BayJDO App](https://repository-images.githubusercontent.com/277010180/676eba80-bdbd-11ea-900a-108fc56a631c)
 
+#### !!  NOT AN ORIGINAL IDEA. JUST A SIMPLE IMPLEMENTATION
+```
+To whomsoever it may concern,
+
+- Neither the idea for this project, nor the technology used, were conceived originally
+by the me (there is no invention of anything).  
+- In fact, the project is somewhat still a basic & simple implementation of the 
+already-popular technology in-use.
+- I am no expert in the field, but only a learner trying to experiment with it.
+- I do not claim any credit for the idea, & have always maintained & acknowledged the 
+inspirations for the project (you can find as well as use them, I have mention them below 
+in the inspiration section).
+- I am open to any constructive criticism, and welcome any corrections / contributions.
+
+Cheers,
+Ashwin Shenoy
+```
+
 ### 🔥 Features
 * ✅ **Light** - The lightest file-transfer app you would find!
-* ✅ **Fast** - Zero Overheads. Theoretically, as fast as your WiFi is!
+* ✅ **Fast** - Theoretically, as fast as your WiFi is!
 * ✅ **Secure** - P2P WebRTC-based File-Transfer
 * ❌ **No Special Hotspot** - Works with any existing hotspot or network between devices.
 * ❌ **No App Install** - Works on any device with a modern web browser.
@@ -90,7 +108,7 @@ If you plan to use it for transferring confidential files etc., please look
 elsewhere for now.
 
 ### 🐱 Inspirations
-Neither the idea for this project, nor the technology used is, were conceived originally
+Neither the idea for this project, nor the technology used, were conceived originally
 by me. This project only differs in implementations (+ some minor features), from
 some of the following popular projects it was inspired from -
 1. https://github.com/cowbell/sharedrop / https://www.sharedrop.io/

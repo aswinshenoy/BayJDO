@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import styled from '@emotion/styled';
 
 const PressReportsContainer = styled.section`
@@ -11,7 +12,7 @@ const PressReportsContainer = styled.section`
     font-size: calc(1.4rem + 0.5vw);
   }
   img {
-    max-height: 45px;
+    max-height: 40px;
     filter: saturate(0);
     &:hover {
       filter: none;
@@ -46,15 +47,23 @@ export default ({ }) => {
 
     return <PressReportsContainer>
         <div className="row mx-0">
-            <div className="col-md-3 d-flex align-items-center p-1">
+            <div className="col-md-3 d-flex align-items-center justify-content-center p-1">
                 <h3>In the News</h3>
             </div>
             <div className="col px-0">
                 <div className="row mx-0">
                     { PressReports.map((i) =>
-                        <div className="col-6 col-md-3 d-flex align-items-center justify-content-center p-2">
-                            <a target="_blank" href={i.url}>
-                                <img src={i.logo} alt={i.publisher} />
+                        <div
+                            key={shortid.generate()}
+                            className="col-6 col-md-3 d-flex align-items-center justify-content-center p-3"
+                        >
+                            <a
+                                title={`View news on ${i.publisher}`}
+                                aria-label={`View news on ${i.publisher}`}
+                                target="_blank"
+                                href={i.url}
+                            >
+                                <img src={i.logo} alt={`Logo of ${i.publisher}`} />
                             </a>
                         </div>
                     )}

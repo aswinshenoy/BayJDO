@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
+import { toast } from 'react-toastify';
 
 
 import { getChunksFromFile, getFileFromChunks } from '../functions';
@@ -40,6 +41,22 @@ export default function usePeer() {
         setConnected(false);
     };
 
+    const disconnect = () => {
+        myConnection.send({
+            type: "disconnect",
+        });
+        cleanUp();
+        toast.success(
+            `You have been disconnected from ${myPeer.id}.`,
+            {
+                autoClose: 1000, hideProgressBar: true, closeButton: false,
+                position: toast.POSITION.BOTTOM_CENTER,
+            }
+        );
+    };
+
+
+
     useEffect(() => {
         import('peerjs').then(() => {
             const myName = uniqueNamesGenerator(nameGeneratorConfig);
@@ -55,6 +72,13 @@ export default function usePeer() {
                 setMyPeer(connection.peer);
                 connection.on('open', () => {
                     setConnected(true);
+                    toast.success(
+                        `You are now connected to ${peer.id}`,
+                        {
+                            autoClose: 1000, hideProgressBar: true, closeButton: false,
+                            position: toast.POSITION.BOTTOM_CENTER,
+                        }
+                    );
                 });
                 connection.on('data', handleReceiveData);
                 connection.on('close', () => {
@@ -88,6 +112,13 @@ export default function usePeer() {
         setConnection(connection);
         connection.on('open', () => {
             setConnected(true);
+            toast.success(
+                `You are now connected to ${peerID}`,
+                {
+                    autoClose: 1000, hideProgressBar: true, closeButton: false,
+                    position: toast.POSITION.BOTTOM_CENTER,
+                }
+            );
         });
         connection.on('data', handleReceiveData);
     };
@@ -239,6 +270,19 @@ export default function usePeer() {
             // a new (/next) chunk
             else if(data.type === 'file_transfer_chunk')
                setChunk(data);
+
+            else if(data.type === 'disconnect')
+            {
+                toast.error(
+                    `Your peer left.`,
+                    {
+                        autoClose: 1000, hideProgressBar: true, closeButton: false,
+                        position: toast.POSITION.BOTTOM_CENTER,
+                    }
+                );
+                cleanUp();
+            }
+
         }
     };
 
@@ -248,7 +292,7 @@ export default function usePeer() {
         addPeer,
         data,
         sendFile,
-        cleanUp,
+        disconnect,
         isConnected
     ];
 }

@@ -12,6 +12,7 @@ const FormWrapper = styled.form`
 `;
 
 const FormBottomBar = styled.div`
+  padding: 0.5rem;
   button {
     font-size: 1.3rem;
     width: 100%;
@@ -36,16 +37,21 @@ export default ({ onConnect }) => {
         <div className="p-3">
             <label className="d-none text-left font-weight-bold pb-1">Enter Peer Code: </label>
             <input
+                aria-label="Enter Peer Code"
                 className="form-control"
                 type="text"
+                title="Enter Peer Code"
+                required
+                aria-required="true"
                 onChange={(e) => setPeerCode(e.target.value)}
                 placeholder="Enter peer code..."
             />
         </div>
         <FormBottomBar>
             <button
+                aria-label="Connect to Peer"
                 disabled={peerCode.length < 4}
-                className="btn btn-warning"
+                className="btn btn-warning shadow"
                 type="submit"
             >
                 Connect to Peer

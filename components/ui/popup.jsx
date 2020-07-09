@@ -69,6 +69,16 @@ const PopUp = ({
             setWidth(wrapRef.current.clientWidth);
     });
 
+    useEffect(() => {
+        return () => {
+            clearAllBodyScrollLocks();
+        }
+    }, []);
+
+    useEffect(() => {
+        if(!isOpen)
+            clearAllBodyScrollLocks();
+    }, [isOpen]);
 
     const renderTopbar = () =>
         <React.Fragment>

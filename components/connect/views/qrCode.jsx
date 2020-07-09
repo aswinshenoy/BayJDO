@@ -7,7 +7,13 @@ export default ({ code }) => {
         <QRCode size={256} value={code} />
         <div className="text-center mt-3">
             <div>Share this Code with Your Peer</div>
-            <h3 className="text-primary">{code}</h3>
+            <div
+                tabIndex="0"
+                title={`Share this code - "${code}", with your peer`}
+                className="h3 text-primary"
+            >
+                {code}
+            </div>
         </div>
     </div>
 }

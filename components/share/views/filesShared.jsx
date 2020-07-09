@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import classNames from 'classnames';
 import styled from '@emotion/styled';
 
 import { FileLister } from '../../files'
@@ -52,17 +53,32 @@ export default ({ filesReceived, filesSent }) => {
 
     return <FileSharedTabs>
         <TabSelectorWrap>
-            <button className={!showFilesSent?'active':null} onClick={() => setShowFilesSent(false)}>
-                Received ({filesReceivedCount})
+            <button
+                className={classNames({'active': !showFilesSent}, "shadow")}
+                onClick={() => setShowFilesSent(false)}
+            >
+                Received
+                <div className="d-inline-block badge-light px-2 ml-2 rounded">{filesReceivedCount}</div>
             </button>
-            <button className={showFilesSent?'active':null} onClick={() => setShowFilesSent(true)}>
-                Sent ({filesSentCount})
+            <button
+                className={classNames({'active': showFilesSent}, "shadow")}
+                onClick={() => setShowFilesSent(true)}
+            >
+                Sent
+                <div className="d-inline-block badge-light px-2 ml-2 rounded">{filesSentCount}</div>
             </button>
         </TabSelectorWrap>
         <TabContainer>
             { showFilesSent ?
-                <FileLister labels={{ noFilesShared: "No files sent." }} files={sortFiles(filesSent)} /> :
-                <FileLister showSaveButton labels={{ noFilesShared: "No files received." }} files={sortFiles(filesReceived)} />
+                <FileLister
+                    labels={{ noFilesShared: "No files sent." }}
+                    files={filesSent ? sortFiles(filesSent) : []}
+                /> :
+                <FileLister
+                    showSaveButton
+                    labels={{ noFilesShared: "No files received." }}
+                    files={filesReceived ? sortFiles(filesReceived) : []}
+                />
             }
         </TabContainer>
 

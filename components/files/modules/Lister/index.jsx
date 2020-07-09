@@ -12,11 +12,13 @@ const EmptyListContainer = styled.div`
       width: 120px;
       max-width: 100%;
       padding: 1.5rem;
+      filter: drop-shadow(1px 2px 5px rgba(0,0,0,0.5));
     }
     h4 {
       margin-top: 1rem;
       margin-bottom: 2rem;
-      font-size: calc(1.2rem + 0.5vw);
+      font-weight: 600;
+      font-size: calc(1rem + 0.25vw);
     }
 `;
 
@@ -34,9 +36,19 @@ export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
         setFiles(filesProp);
     }, [filesProp]);
 
-    return typeof files === 'object' && files.length > 0 ? <div>{
-        files.map((f) => <div key={f.id} className="p-2"><FileViewer showSaveButton={showSaveButton} fileData={f} /></div>)
-    }</div> :
+    console.log(files);
+
+    return files && files instanceof Array && files.length > 0 ?
+    <div>
+    {files.map((f) =>
+        <div key={f.id} className="p-2">
+            <FileViewer
+                showSaveButton={showSaveButton}
+                fileData={f}
+            />
+        </div>
+    )}
+    </div> :
     <EmptyListContainer>
         <div>
             <img src={require('../../../../images/illustrations/empty.png')} alt={labels.noFilesShared} />

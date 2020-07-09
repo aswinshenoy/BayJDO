@@ -45,6 +45,8 @@ export default ({ myCode, onConnect }) => {
                     <QRBottomBar>
                         {   type !== 'qrScanner' &&
                         <button
+                            aria-label="Scan QR Code"
+                            title="Scan QR Code"
                             className="btn btn-primary"
                             onClick={() => setType('qrScanner')}
                         >
@@ -53,7 +55,9 @@ export default ({ myCode, onConnect }) => {
                         }
                         {   type !== 'qrCode' &&
                         <button
-                            className="btn btn-primary"
+                            aria-label="Show My QR Code"
+                            title="Show My QR Code"
+                            className="btn btn-primary shadow"
                             onClick={() => setType('qrCode')}
                         >
                             Show My QR
@@ -61,7 +65,9 @@ export default ({ myCode, onConnect }) => {
                         }
                         {   type !== 'codeInput' &&
                             <button
-                                className="btn btn-primary"
+                                aria-label="Enter Code Instead"
+                                title="Enter Code Instead"
+                                className="btn btn-primary shadow"
                                 onClick={() => setType('codeInput')}
                             >
                                 Enter Code Instead

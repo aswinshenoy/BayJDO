@@ -43,8 +43,13 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
     <span className="text-danger font-weight-bold"> Unknown Error </span>;
 
     const renderSaveButton = showSaveButton ?
-    <SaveButton onClick={onSave}>
-        <i className="gg-software-download" />
+    <SaveButton
+        role="button"
+        title="Save to Device"
+        aria-label="Save File to Device"
+        onClick={onSave}
+    >
+        <i  className="gg-software-download" />
         <span className="pl-1">Save</span>
     </SaveButton>
     : null;
@@ -62,7 +67,7 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
     const renderTransferSize = () => {
         if(meta && meta.size) {
             if(progress && progress < 100)
-                return <span>{prettyBytes(meta.size*(progress/100))} / {prettyBytes(meta.size)}</span>
+                return <span>{prettyBytes(meta.size*(progress/100))} / {prettyBytes(meta.size)}</span>;
             return <span>{prettyBytes(meta.size)}</span>
         }
         return <span> -- / -- </span>;
@@ -70,6 +75,7 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
 
     return <FilePreviewContainer
         progress={(state === 'sending' || state === 'receiving' )? progress : null}
+        className="shadow"
     >
         {renderPreview()}
         <div className="row mx-0 mt-2 w-100">

@@ -29,7 +29,7 @@ export default ({ }) => {
 
     return <AppStoreSectionContainer>
         <div style={{ maxWidth: '720px' }}>
-            <h2>Not Available on the <span className="d-inline-block">Google Playstore & App Store</span>.</h2>
+            <h2>Not Available on the <span className="d-inline-block">Google Playstore & App Store.</span></h2>
             <p>
                 <span className="mb-3">
                     Yes! You read it right.

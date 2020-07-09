@@ -4,7 +4,7 @@ import {usePeer} from "../../hooks";
 
 import { LandingPage } from '../landing';
 import { FileShare } from '../share';
-import {Credits} from "../common";
+
 
 export default ({ }) => {
     const [
@@ -13,7 +13,7 @@ export default ({ }) => {
         addPeer,
         data,
         sendFile,
-        cleanUp,
+        disconnect,
         isConnected,
     ] = usePeer();
 
@@ -46,10 +46,11 @@ export default ({ }) => {
     };
 
     const handleDisconnect = () => {
-        cleanUp();
+        disconnect();
         setFilesReceived([]);
         setFilesSent([]);
     };
+
 
     return isConnected && myPeer ?
     <FileShare
@@ -65,6 +66,7 @@ export default ({ }) => {
         isLoading={!(myself && myself.id)}
         myCode={myself && myself.id}
         onConnect={(data) => addPeer(data)}
-    />
+    />;
+
 
 }

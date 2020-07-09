@@ -4,16 +4,17 @@ import styled from '@emotion/styled';
 import { FileSelector } from "../files/modules";
 
 import { FileSharedViewer, PeerCard } from './views';
-import { Credits } from "../common";
+import { Topbar, Footer } from "../common";
 
 const ShareWindowContainer = styled.div`
     display: flex;
     justify-content: center;
+    padding: 15vmin 0;
+    background-color: #0D47A1;
     .row {
       max-width: 900px;
     }
 `;
-
 
 export default ({
     myCode, peerCode, currentFile,
@@ -63,48 +64,37 @@ export default ({
 
     const getActiveQueue = () => {
         let q = [];
-        if(filesQueued.length > 0 && currentFile !== null)
-        {
+        if(filesQueued.length > 0 && currentFile)
             q = [currentFile, ...filesQueued];
-        } else if(currentFile !== null){
+        else if(currentFile)
             q = [currentFile];
-        } else if(filesQueued.length > 0)
-        {
+        else if(filesQueued.length > 0)
             q = [...filesQueued];
-        }
         return q;
     };
 
-    return <ShareWindowContainer>
-        <div className="row mx-0 w-100">
-            <div className="col-md-3 bg-white d-flex align-items-center justify-content-center p-2">
-                <img
-                    className="w-100 p-2 rounded"
-                    style={{ maxWidth: '35vw' }}
-                    alt="bayjdo_logo"
-                    src={require('../../images/brand/logo_color.png')}
-                />
+    return <React.Fragment>
+        <Topbar />
+        <ShareWindowContainer>
+            <div className="row mx-0 w-100">
+                <div className="col-12 p-2">
+                    <PeerCard code={peerCode} onDisconnect={onDisconnect} />
+                </div>
+                <div className="col p-2">
+                    <FileSelector
+                        onSelect={handleOnSelect}
+                        queue={getActiveQueue()}
+                    />
+                </div>
+                <div className="col-md-6 p-2">
+                    <FileSharedViewer
+                        filesReceived={filesReceived}
+                        filesSent={filesSent}
+                    />
+                </div>
             </div>
-            <div className="col-md-9 p-2">
-                <PeerCard code={peerCode} onDisconnect={onDisconnect} />
-            </div>
-            <div className="col p-2">
-                <FileSelector
-                    onSelect={handleOnSelect}
-                    queue={getActiveQueue()}
-                />
-            </div>
-            <div className="col-md-6 p-2">
-                <FileSharedViewer
-                    filesReceived={filesReceived}
-                    filesSent={filesSent}
-                />
-            </div>
-            <div className="col-12 text-center px-2 pt-5 pb-3">
-                <Credits />
-            </div>
-        </div>
-    </ShareWindowContainer>
-
+        </ShareWindowContainer>
+        <Footer hideInfoList />
+    </React.Fragment>
 
 }

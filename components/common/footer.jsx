@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const FooterInfoListContainer = styled.div`
-  min-height: 15vh;
+  min-height: 20vh;
   background-color: #EAEAEA;
   width: 100%;
   display: flex;
@@ -10,13 +10,23 @@ const FooterInfoListContainer = styled.div`
   text-align: center;
   justify-content: center;
   padding: 5vh 0;
+  .col-6 {
+    &:hover {
+      color: #218838;
+      transition: all 0.25s;
+      img {
+        width: 38px;
+        transition: all 0.25s;
+      }
+    }
+  }
   img {
     width: 36px;
     margin-bottom: 1rem;
   }
   h5 {
     text-align: center;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 600;
   }
 `;
@@ -60,45 +70,45 @@ const DeveloperCreditMark = styled.div`
     }
 `;
 
-export default ({ }) => {
+export default ({ hideInfoList }) => {
 
     const FooterInfoList = [
         {
-            "icon": require('../../../images/icons/landing/no-ads.png'),
+            "icon": require('../../images/icons/landing/no-ads.png'),
             "title": "No Annoying Advertisements"
         },
         {
-            "icon": require('../../../images/icons/landing/id-not-verified.png'),
+            "icon": require('../../images/icons/landing/id-not-verified.png'),
             "title": "No User Info Asked/Stored"
         },
         {
-            "icon": require('../../../images/icons/landing/hide.png'),
+            "icon": require('../../images/icons/landing/hide.png'),
             "title": "No System Permissions Required"
         },
         {
-            "icon": require('../../../images/icons/landing/secure.png'),
+            "icon": require('../../images/icons/landing/secure.png'),
             "title": "100% Privacy & P2P Encryption Ensured"
         },
 
     ];
 
-    return <section>
+    return <footer>
         <div>
-            <FooterInfoListContainer>
+            {!hideInfoList && <FooterInfoListContainer>
                 <div className="row mx-0 w-100" style={{ maxWidth: '900px' }}>
-                { FooterInfoList.map((i) =>
-                    <div className="col-6 col-md-3 p-3">
-                        <img src={i.icon} alt={i.title} />
-                        <h5>{i.title}</h5>
-                    </div>
-                )}
+                    { FooterInfoList.map((i) =>
+                        <div className="col-6 col-md-3 p-3">
+                            <img src={i.icon} alt={i.title} />
+                            <h5>{i.title}</h5>
+                        </div>
+                    )}
                 </div>
-            </FooterInfoListContainer>
+            </FooterInfoListContainer>}
             <IndianBrandMark>
                 <div>
                     <div className="d-md-flex align-items-center justify-content-center p-2">
                         <span>A product from </span>
-                        <img alt="indian-flag" src={require('../../../images/icons/landing/india-flag.png')} />
+                        <img alt="indian-flag" src={require('../../images/icons/landing/india-flag.png')} />
                         <span><b>India</b> to the world with love ❤️.</span>
                     </div>
                     <div style={{ fontSize: '1.1rem' }}>
@@ -108,8 +118,14 @@ export default ({ }) => {
                 </div>
             </IndianBrandMark>
             <DeveloperCreditMark>
-                <a href="https://aswinshenoy.com/" target="_blank">
-                    <img src={require('../../../images/brand/aswin_shenoy_logo.png')} alt="Made by Ashwin Shenoy" />
+                <a
+                    aria-label="Made by Ashwin Shenoy, click to his website"
+                    title="Made by Ashwin Shenoy"
+                    href="https://aswinshenoy.com/"
+                    target="_blank"
+                    role="button"
+                >
+                    <img src={require('../../images/brand/aswin_shenoy_logo.png')} alt="Made by Ashwin Shenoy" />
                 </a>
             </DeveloperCreditMark>
             <div className="pt-3 pb-5 bg-white px-2 text-center d-flex align-items-center justify-content-center">
@@ -127,5 +143,5 @@ export default ({ }) => {
                 </div>
             </div>
         </div>
-    </section>
+    </footer>
 }

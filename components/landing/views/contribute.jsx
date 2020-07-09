@@ -79,11 +79,16 @@ export default ({ }) => {
                     </p>
                     <div className="github-badges d-inline-block">
                         <img alt="Open Source License" src="https://img.shields.io/github/license/aswinshenoy/bayjdo" />
-                        <img alt="latest release" src="https://img.shields.io/github/v/release/aswinshenoy/bayjdo?include_prereleases" />
-                        <img alt="last commit" src="https://img.shields.io/github/last-commit/aswinshenoy/bayjdo" />
+                        <img alt="Latest Release Version" src="https://img.shields.io/github/v/release/aswinshenoy/bayjdo?include_prereleases" />
+                        <img alt="Last Commit Date" src="https://img.shields.io/github/last-commit/aswinshenoy/bayjdo" />
                     </div>
                     <div>
-                        <a href="https://github.com/aswinshenoy/bayjdo">
+                        <a
+                            role="button"
+                            title="View on GitHub"
+                            aria-label="View on Github"
+                            href="https://github.com/aswinshenoy/bayjdo"
+                        >
                             <img src={require('../../../images/icons/landing/github.svg')} alt="github-logo" />
                             Contribute on GitHub
                         </a>
@@ -101,7 +106,13 @@ export default ({ }) => {
                         will greatly help in making Bayjdo better for everyone.
                     </p>
                     <div>
-                        <a href="https://forms.gle/3bLNjQPUocYTX1eb9" target="_blank">
+                        <a
+                            role="button"
+                            title="Participate in Survey"
+                            aria-label="Participate in Survey"
+                            href="https://forms.gle/3bLNjQPUocYTX1eb9"
+                            target="_blank"
+                        >
                             <img src={require('../../../images/icons/landing/survey.png')} alt="survey-icon" />
                             Participate in Survey
                         </a>

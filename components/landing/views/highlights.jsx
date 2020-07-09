@@ -1,7 +1,8 @@
 import React from 'react';
+import shortid from 'shortid';
 import styled from '@emotion/styled';
 
-const HighlightsContainer = styled.div`
+const HighlightsContainer = styled.section`
   background-color: #FFD600;
   padding: 5vh 2vw;
   min-height: 60vh;
@@ -72,7 +73,7 @@ export default ({ }) => {
     return <HighlightsContainer>
         <div className="row mx-0 w-100">
             {highlights.map((i) =>
-                    <div className="col-6 col-md-3 p-2">
+                    <div key={shortid.generate()} className="col-6 col-md-3 p-2">
                         <HighlightCard>
                             <div>
                                 <img src={i.icon} alt="Icon" />
