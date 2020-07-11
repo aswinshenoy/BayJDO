@@ -7,6 +7,7 @@ import  {
 import {
     AppStore,
     Contributing,
+    FAQ,
     Header,
     Highlights,
     Press
@@ -41,6 +42,7 @@ export default ({ myCode, onConnect, isLoading }) => {
         </div>
         <Highlights />
         <AppStore />
+        <FAQ />
         <Press />
         <Contributing />
         <Footer />
