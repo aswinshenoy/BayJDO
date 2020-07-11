@@ -27,6 +27,15 @@ const nameGeneratorConfig = {
     length: 2,
 };
 
+const throwToast = (type, message) => {
+    const config = {
+        autoClose: 1000, hideProgressBar: true, closeButton: false,
+        position: toast.POSITION.BOTTOM_CENTER,
+    };
+    if(type === 'error') toast.error(message, config);
+    else if(type === 'success') toast.success(message, config);
+};
+
 export default function usePeer() {
 
     const [myself, setMyself] = useState(null);
@@ -42,19 +51,41 @@ export default function usePeer() {
     };
 
     const disconnect = () => {
-        myConnection.send({
-            type: "disconnect",
-        });
+        myConnection.send({ type: "disconnect" });
         cleanUp();
-        toast.success(
-            `You have been disconnected from ${myPeer.id}.`,
-            {
-                autoClose: 1000, hideProgressBar: true, closeButton: false,
-                position: toast.POSITION.BOTTOM_CENTER,
-            }
-        );
+        throwToast("success", `You have been disconnected from ${myPeer.id}.`);
     };
 
+    const handlePeerOpen = (peer) => {
+        setMyself(peer);
+        setConnected(true);
+    };
+
+    const handlePeerConnection = (connection) => {
+        setConnection(connection);
+        setMyPeer(connection.peer);
+        connection.on('open', () => {
+            setConnected(true);
+            throwToast("success", `You are now connected to ${connection.peer.id}`);
+        });
+        connection.on('data', handleReceiveData);
+        connection.on('close', cleanUp);
+    };
+
+    const handlePeerDisconnect = () => {
+        console.log("Peer disconnected");
+        cleanUp()
+    };
+
+    const handlePeerClose = () => {
+        console.log("Peer closed remotely");
+        cleanUp();
+    };
+
+    const handlePeerError = (error) => {
+        console.log("peer error", error);
+        cleanUp();
+    };
 
 
     useEffect(() => {
@@ -62,69 +93,39 @@ export default function usePeer() {
             const myName = uniqueNamesGenerator(nameGeneratorConfig);
             const peer =  myself ? myself : new Peer(myName, prodConfig);
 
-            peer.on('open', () => {
-                setMyself(peer);
-                setConnected(true);
-            });
-
-            peer.on('connection', (connection) => {
-                setConnection(connection);
-                setMyPeer(connection.peer);
-                connection.on('open', () => {
-                    setConnected(true);
-                    toast.success(
-                        `You are now connected to ${peer.id}`,
-                        {
-                            autoClose: 1000, hideProgressBar: true, closeButton: false,
-                            position: toast.POSITION.BOTTOM_CENTER,
-                        }
-                    );
-                });
-                connection.on('data', handleReceiveData);
-                connection.on('close', () => {
-                    cleanUp();
-                });
-            });
-
-            peer.on('disconnected', () => {
-                console.log("Peer disconnected");
-                cleanUp()
-            });
-
-            peer.on('close', () => {
-                console.log("Peer closed remotely");
-                cleanUp()
-            });
-
-            peer.on('error', (error) => {
-                console.log("peer error", error);
-                cleanUp()
-            });
+            peer.on('open', () => handlePeerOpen(peer));
+            peer.on('connection', handlePeerConnection);
+            peer.on('disconnected', handlePeerDisconnect);
+            peer.on('close', handlePeerClose);
+            peer.on('error', handlePeerError);
         });
         return () => {
             cleanUp()
         }
     }, []);
 
-    const addPeer = (peerID) => {
+    const connectToPeer = (peerID) => {
         const connection = myself.connect(peerID);
         setMyPeer(peerID);
         setConnection(connection);
         connection.on('open', () => {
             setConnected(true);
-            toast.success(
-                `You are now connected to ${peerID}`,
-                {
-                    autoClose: 1000, hideProgressBar: true, closeButton: false,
-                    position: toast.POSITION.BOTTOM_CENTER,
-                }
-            );
+            throwToast("success", `You are now connected to ${peerID}`);
         });
         connection.on('data', handleReceiveData);
     };
 
     const [fileToSend, setFileToSend] = useState(null);
     const [fileChunkIndex, setFileChunkIndex] = useState(null);
+
+    const _startFileTransfer = (id, totalChunks, meta) => myConnection.send({
+        id, meta, totalChunks, type: "file_transfer_start",
+        status: { state: 'sending', progress: 1 },
+    });
+    const _sendFileChunk = ({ id, meta, chunks }, index) => myConnection.send({
+        id, index, chunk: chunks[index], totalChunks: chunks.length, meta,
+        type: "file_transfer_chunk",
+    });
 
     const sendFile = async ({ id, file, url, meta }) => {
         const chunks = await getChunksFromFile(file);
@@ -136,62 +137,37 @@ export default function usePeer() {
             chunks,
             meta
         });
-
         // Send File Meta first
-        myConnection.send({
-            id,
-            type: "file_transfer_start",
-            totalChunks: chunks.length,
-            status: {
-                state: 'sending',
-                progress: 1,
-            },
-            meta
-        });
-
+        _startFileTransfer(id, chunks.length, meta)
     };
 
     useEffect(() => {
         if (fileChunkIndex !== null) {
-            myConnection.send({
-                id: fileToSend.id,
-                type: "file_transfer_chunk",
-                index: fileChunkIndex,
-                chunk: fileToSend.chunks[fileChunkIndex],
-                totalChunks: fileToSend.chunks.length,
-            });
-            if(fileChunkIndex+1===fileToSend.chunks.length)
-                setData({
-                    ...fileToSend,
-                    userRole: 'sender',
-                    status: {
-                        progress: 100,
-                        state: 'sent',
-                    },
-                    timestamp: new Date().getTime(),
-                });
-            else
-                setData({
-                    ...fileToSend,
-                    userRole: 'sender',
-                    status: {
-                        progress: (fileChunkIndex/fileToSend.chunks.length)*100,
-                        state: 'sending',
-                    }
-                });
+            _sendFileChunk(fileToSend, fileChunkIndex);
+            setData((data) => { return {
+                ...fileToSend,
+                ...data,
+                userRole: 'sender',
+                status: { progress: (fileChunkIndex/fileToSend.chunks.length)*100, state: 'sending' }
+            }});
         }
     }, [fileChunkIndex]);
 
     const [file, setFile] = useState([]);
     const [chunk, setChunk] = useState(null);
 
+    const _sendFileReceipt = ({ id, meta }) => myConnection.send({ id, type: "file_receipt", meta });
+    const _requestForFileChunk = (id, index) => myConnection.send({ id, index, type: "file_chunk_request" });
+
     const [hasReceivedFile, setReceivedFile] = useState(false);
     useEffect(() => {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
             const resp = getFileFromChunks(file.chunks, file.meta);
+            _sendFileReceipt(file);
             setData({
                 ...resp,
+                id: file.id,
                 userRole: 'receiver',
                 status: {
                     progress: 100,
@@ -203,9 +179,13 @@ export default function usePeer() {
     }, [hasReceivedFile]);
 
 
+    const [receiveIndex, setReceiveIndex] = useState(0);
+
+    // handle requesting & receiving file
     useEffect(() => {
-        if(chunk)
-        {
+        if(chunk === false)
+            _requestForFileChunk(file.id, receiveIndex);
+        else if(chunk) {
             let dataChunks = [];
             if(file && file.chunks)
                 dataChunks = [...file.chunks];
@@ -218,6 +198,7 @@ export default function usePeer() {
                 meta,
             });
             setData({
+                id: chunk.id,
                 meta,
                 userRole: 'receiver',
                 status: {
@@ -225,61 +206,55 @@ export default function usePeer() {
                     progress: (receiveIndex/file.totalChunks)*100
                 }
             });
-            setReceiveIndex(receiveIndex+1);
             if(receiveIndex+1 < file.totalChunks)
-                myConnection.send({
-                    id: file.id,
-                    type: "file_chunk_request",
-                    index: receiveIndex + 1,
-                });
-            else {
-                setReceivedFile(true);
-            }
-        } else if(chunk === false) {
-            myConnection.send({
-                id: file.id,
-                type: "file_chunk_request",
-                index: receiveIndex,
-            });
+                _requestForFileChunk(file.id, receiveIndex+1);
+            else setReceivedFile(true);
+            setReceiveIndex(receiveIndex+1);
         }
     }, [chunk]);
 
-    const [receiveIndex, setReceiveIndex] = useState(0);
+
+    const handleReceiveNewFile = (file) => {
+        setReceivedFile(false);
+        setReceiveIndex(0);
+        setChunk(false);
+        setFile( {
+            id: file.id,
+            meta: file.meta,
+            status: file.status,
+            chunks: [],
+            totalChunks: file.totalChunks,
+            complete: false,
+        });
+    };
+
     const handleReceiveData = (data) => {
         if(data && data.type)
         {
-            // new file
+            // receive new file
             if(data.type === 'file_transfer_start')
-            {
-                setReceivedFile(false);
-                setFile( {
-                    ...file,
-                    id: data.id,
-                    meta: data.meta,
-                    status: data.status,
-                    chunks: [],
-                    totalChunks: data.totalChunks,
-                    complete: false,
-                });
-                setReceiveIndex(0);
-                setChunk(false);
-            }
-            // request for the next chunk
+                handleReceiveNewFile(data);
+            // process request for the next chunk
             else if(data.type === 'file_chunk_request')
                 setFileChunkIndex(data.index);
-            // a new (/next) chunk
+            // send a new (/next) chunk
             else if(data.type === 'file_transfer_chunk')
                setChunk(data);
-
+            // confirmation receipt for file transfer
+            else if(data.type === 'file_receipt')
+            {
+                setData((data) => {
+                    return {
+                        ...data,
+                        status: {progress: 100, state: 'sent'},
+                        timestamp: new Date().getTime(),
+                    };
+                });
+            }
+            // disconnection request
             else if(data.type === 'disconnect')
             {
-                toast.error(
-                    `Your peer left.`,
-                    {
-                        autoClose: 1000, hideProgressBar: true, closeButton: false,
-                        position: toast.POSITION.BOTTOM_CENTER,
-                    }
-                );
+                throwToast("error", `Your peer left.`);
                 cleanUp();
             }
 
@@ -289,8 +264,8 @@ export default function usePeer() {
     return [
         myself,
         myPeer,
-        addPeer,
         data,
+        connectToPeer,
         sendFile,
         disconnect,
         isConnected

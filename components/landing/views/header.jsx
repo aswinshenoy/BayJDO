@@ -86,7 +86,7 @@ export default ({ myCode, isLoading, onConnect }) => {
                                         myCode={myCode}
                                         onConnect={onConnect}
                                     />
-                                    <p className="mt-3 text-center p-4">
+                                    <p className="mt-2 text-center p-4">
                                         If you face any issue with connecting with your peer, try reloading the pages
                                         to generate a new code for each of you.
                                     </p>
@@ -123,15 +123,17 @@ export default ({ myCode, isLoading, onConnect }) => {
             onClose={() => setShowConnector(false)}
             appElement=".app"
         >
-            <PeerConnector
-                isLoading={isLoading}
-                myCode={myCode}
-                onConnect={onConnect}
-            />
-            <p className="mt-3 text-center p-4">
-                If you face any issue with connecting with your peer, try reloading the pages
-                to generate a new code for each of you.
-            </p>
+            <div style={{ overflowY: "auto", maxHeight: '100vh' }}>
+                <PeerConnector
+                    isLoading={isLoading}
+                    myCode={myCode}
+                    onConnect={onConnect}
+                />
+                <p className="mt-2 text-center p-4">
+                    If you face any issue with connecting with your peer, try reloading the pages
+                    to generate a new code for each of you.
+                </p>
+            </div>
         </PopUp>
     </CoverWrapper>
     </React.Fragment>

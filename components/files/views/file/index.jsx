@@ -19,7 +19,7 @@ const FilePreviewContainer = styled.div`
 
 const SaveButton = styled.button`
   background: transparent;;
-  color: blue;
+  color: #007bff;
   border: 1.5px solid;
   border-radius: 1.5rem;
   padding: 0.5rem 2rem;
@@ -27,7 +27,7 @@ const SaveButton = styled.button`
   align-items: center;
   :focus, :hover {
     outline: none;
-    background: blue;
+    background: #007bff;
     color: white;
   }
 `;

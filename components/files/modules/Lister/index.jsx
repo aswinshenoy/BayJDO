@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import FileViewer from '../Viewer';
 
+const FileListerContainer = styled.div`
+  max-height: 75vh;
+  overflow-y: auto;
+`;
+
 const EmptyListContainer = styled.div`
     min-height: 15vh;
     text-align: center;
@@ -36,10 +41,8 @@ export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
         setFiles(filesProp);
     }, [filesProp]);
 
-    console.log(files);
-
     return files && files instanceof Array && files.length > 0 ?
-    <div>
+    <FileListerContainer className="minimal-scrollbar">
     {files.map((f) =>
         <div key={f.id} className="p-2">
             <FileViewer
@@ -48,7 +51,7 @@ export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
             />
         </div>
     )}
-    </div> :
+    </FileListerContainer> :
     <EmptyListContainer>
         <div>
             <img src={require('../../../../images/illustrations/empty.png')} alt={labels.noFilesShared} />

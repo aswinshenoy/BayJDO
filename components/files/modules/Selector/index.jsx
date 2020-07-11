@@ -9,6 +9,10 @@ const FileSelectorWrap = styled.div`
   background-color: white;
   padding:1rem;
   border-radius: 0.5rem;
+  h4 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
   .dropzone {
     border: 2px dashed rgba(0,0,0,0.4);
     padding: 5vh 2.5vw;
@@ -110,7 +114,10 @@ export default ({ onSelect, queue }) => {
             {renderLargeScreenSelector}
         </div>
         <div className="mt-md-4">
-            <h4 className="p-2 my-2">Queue ({queue && queue.length > 0 ? queue.length : 0})</h4>
+            <h4 className="p-2 my-2">
+                <span className="pr-2">Queue</span>
+                <span className="bg-warning rounded px-3 shadow">{queue && queue.length > 0 ? queue.length : 0}</span>
+            </h4>
             <div className="bg-light rounded p-2">
                 <FileLister files={queue} labels={{ noFilesShared: "No files pending." }} />
             </div>

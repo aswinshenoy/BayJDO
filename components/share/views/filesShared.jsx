@@ -58,14 +58,14 @@ export default ({ filesReceived, filesSent }) => {
                 onClick={() => setShowFilesSent(false)}
             >
                 Received
-                <div className="d-inline-block badge-light px-2 ml-2 rounded">{filesReceivedCount}</div>
+                <div className="d-inline-block badge-light px-3 ml-2 shadow rounded">{filesReceivedCount}</div>
             </button>
             <button
                 className={classNames({'active': showFilesSent}, "shadow")}
                 onClick={() => setShowFilesSent(true)}
             >
                 Sent
-                <div className="d-inline-block badge-light px-2 ml-2 rounded">{filesSentCount}</div>
+                <div className="d-inline-block badge-light px-3 ml-2 shadow rounded">{filesSentCount}</div>
             </button>
         </TabSelectorWrap>
         <TabContainer>

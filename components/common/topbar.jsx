@@ -11,26 +11,24 @@ const TopBar = styled.nav`
   z-index: 3000;
   box-shadow: 0 5px 15px rgba(0,0,0,0.5);
   img {
-    max-width: 200px;
-    width: 12vw;
-    min-width: 150px;
+    height: 6vh;
+    max-height: 64px;
+    width: auto!important;
   }
 `;
 
 export default ({ menu }) => {
 
     return <TopBar>
-        <div className="container-lg px-0">
-            <div className="row mx-0">
-                <div className="col d-flex justify-content-center p-2">
-                    <img src={require('../../images/brand/logo_color.png')} alt="BayJDO Logo" />
-                </div>
-                {menu &&
-                    <div className="col-6 col-md-3 px-1">
-
-                    </div>
-                }
+        <div className="row mx-0 w-100">
+            <div className="col-12 d-flex justify-content-center p-2">
+                <img src={require('../../images/brand/logo_color.png')} alt="BayJDO Logo" />
             </div>
+            {menu &&
+                <div className="col-6 col-md-3 px-1">
+
+                </div>
+            }
         </div>
     </TopBar>
 }

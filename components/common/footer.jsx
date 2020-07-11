@@ -1,4 +1,5 @@
 import React from 'react';
+import shortid from 'shortid';
 import styled from '@emotion/styled';
 
 const FooterInfoListContainer = styled.div`
@@ -97,7 +98,7 @@ export default ({ hideInfoList }) => {
             {!hideInfoList && <FooterInfoListContainer>
                 <div className="row mx-0 w-100" style={{ maxWidth: '900px' }}>
                     { FooterInfoList.map((i) =>
-                        <div className="col-6 col-md-3 p-3">
+                        <div key={shortid.generate()} className="col-6 col-md-3 p-3">
                             <img src={i.icon} alt={i.title} />
                             <h5>{i.title}</h5>
                         </div>

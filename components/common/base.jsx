@@ -12,7 +12,7 @@ import '../../styles/animate.css';
 import '../../styles/styles.css';
 
 const seoTags = {
-    "siteName": "BaYJDO",
+    "siteName": "BayJDO",
     "tagLine": "Fast, Simple & Secure Peer-To-Peer File Transfer",
     "description": "Share files between devices right from your browser, without even needing to install an app or creating a dedicated hotspot."
 };
