@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
-import { toast } from 'react-toastify';
+import { throwToast } from '../functions';
 
 
 import { getChunksFromFile, getFileFromChunks } from '../functions';
@@ -25,15 +25,6 @@ const nameGeneratorConfig = {
     dictionaries: [adjectives, animals],
     separator: '-',
     length: 2,
-};
-
-const throwToast = (type, message) => {
-    const config = {
-        autoClose: 1000, hideProgressBar: true, closeButton: false,
-        position: toast.POSITION.BOTTOM_CENTER,
-    };
-    if(type === 'error') toast.error(message, config);
-    else if(type === 'success') toast.success(message, config);
 };
 
 export default function usePeer() {

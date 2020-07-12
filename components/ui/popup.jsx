@@ -3,6 +3,7 @@ import Modal from "react-modal";
 import styled from '@emotion/styled'
 import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 import classNames from "classnames";
+import { ToastContainer } from 'react-toastify';
 
 import '../../styles/ui/popup.css';
 
@@ -85,7 +86,12 @@ const PopUp = ({
             <TopbarWrapper ref={wrapRef}>
                 <Topbar style={{ width: width }} className={classNames(topbarClassName, "popup-topbar")} ref={topbarRef}>
                     <div style={{ width: '45px' }} className="d-flex align-items-center justify-content-center">
-                        <button onClick={handleOnClose} className={classNames(closeButtonClassName, "plain-button p-2")}>
+                        <button
+                            aria-label="Close"
+                            title="Close"
+                            onClick={handleOnClose}
+                            className={classNames(closeButtonClassName, "plain-button p-2")}
+                        >
                             <i className="gg-close" />
                         </button>
                     </div>
@@ -114,6 +120,7 @@ const PopUp = ({
         <div>
             {showTopbar ? renderTopbar() : showTopbarOnMobile && <div className="d-md-none d-flex">{renderTopbar()}</div>}
             {children}
+            <ToastContainer />
         </div>
     </Modal>
 };

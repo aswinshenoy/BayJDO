@@ -22,6 +22,16 @@ const AppStoreSectionContainer = styled.section`
       font-weight: 600;
     }
   }
+  a {
+    background: linear-gradient(to right, #396afc, #2948ff);
+    color: white;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    border-radius: 0.5rem;
+    display: inline-block;
+    text-decoration: none!important;
+  }
 `;
 
 export default ({ }) => {
@@ -40,6 +50,7 @@ export default ({ }) => {
                 have to take the pain of downloading, updating and losing storage space
                 for the app.
             </p>
+            <a href="/install">Install Now</a>
         </div>
     </AppStoreSectionContainer>
 }
