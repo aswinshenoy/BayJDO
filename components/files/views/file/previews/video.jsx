@@ -26,7 +26,12 @@ export default ({ url, meta: { type, name, }, isTransferred }) => {
                 <div className="font-weight-bold overflow-hidden">{name}</div>
             </div>
             <div className="col-4 d-flex justify-content-end px-1">
-                <button className="btn btn-outline-primary px-2 py-1" onClick={() => setRenderPlayer(false)}>
+                <button
+                    aria-label="Close Playback"
+                    title="Close Playback"
+                    className="btn btn-outline-primary px-2 py-1"
+                    onClick={() => setRenderPlayer(false)}
+                >
                     Close Playback
                 </button>
             </div>
@@ -41,6 +46,8 @@ export default ({ url, meta: { type, name, }, isTransferred }) => {
                 <div className="font-weight-bold overflow-hidden">{name}</div>
                 {  isTransferred &&
                     <button
+                        aria-label="Play Video"
+                        title="Play Video"
                         className="btn btn-outline-primary d-flex align-items-center justify-content-center mt-2 px-2 py-1"
                         onClick={() => setRenderPlayer(true)}
                     >

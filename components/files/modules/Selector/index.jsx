@@ -41,11 +41,17 @@ const FooterFileSelector = styled.div`
 
 export default ({ onSelect, queue }) => {
 
+    const getFileURL = (file) => {
+        const fileSize = file.size / (1024 * 1024);
+        if(fileSize < 50) return URL.createObjectURL(file);
+        else return null;
+    };
+
     const processFile = (file) => {
         return {
             id: shortid.generate(),
             file,
-            url: URL.createObjectURL(file),
+            url: getFileURL(file),
             meta: {
                 name: file.name,
                 type: file.type,

@@ -42,6 +42,8 @@ export default ({ onConnect }) => {
                 type="text"
                 title="Enter Peer Code"
                 required
+                autoFocus
+                autoComplete="false"
                 aria-required="true"
                 onChange={(e) => setPeerCode(e.target.value)}
                 placeholder="Enter peer code..."

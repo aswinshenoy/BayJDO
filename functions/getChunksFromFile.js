@@ -1,6 +1,5 @@
 export default async function getChunksFromFile(file, chunkSize = 6 * 1024 * 1024) {
-    if(file)
-    {
+    if(file) {
         return await file.arrayBuffer().then((buffer) => {
             let chunks = [];
             while(buffer.byteLength) {

@@ -51,16 +51,15 @@ const InstallationPageWindow = styled.div`
 `;
 
 export default ({ }) => {
-    let deferredPrompt;
 
     useEffect(() => {
         window.addEventListener('beforeinstallprompt', e => {
+            const btn = document.querySelector('#install');
             if (window.matchMedia('(display-mode: standalone)').matches) {
-                // don't display install banner when installed
+                btn.disabled = true;
+                btn.innerHTML = 'Already Installed';
                 return e.preventDefault();
             } else {
-                const btn = document.querySelector('#install');
-                btn.hidden = false;
                 btn.onclick = _ => e.prompt();
                 return e.preventDefault();
             }

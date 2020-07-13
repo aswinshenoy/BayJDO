@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import { throwToast } from '../functions';
 
-
-import { getChunksFromFile, getFileFromChunks } from '../functions';
+import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
     host: '/',
@@ -13,13 +12,13 @@ const prodConfig = {
     debug: 1
 };
 
-const localConfig = {
-    host: '192.168.43.88',
-    secure: false,
-    port: 9000,
-    path: '/myapp',
-    debug: 0
-};
+// const prodConfig = {
+//     host: '192.168.43.88',
+//     secure: false,
+//     port: 9000,
+//     path: '/myapp',
+//     debug: 0
+// };
 
 const nameGeneratorConfig = {
     dictionaries: [adjectives, animals],
@@ -113,42 +112,57 @@ export default function usePeer() {
         id, meta, totalChunks, type: "file_transfer_start",
         status: { state: 'sending', progress: 1 },
     });
-    const _sendFileChunk = ({ id, meta, chunks }, index) => myConnection.send({
-        id, index, chunk: chunks[index], totalChunks: chunks.length, meta,
-        type: "file_transfer_chunk",
-    });
+    const _sendFileChunk = async ({ id, meta, chunker }, index) => {
+        chunker.nextChunk().then((chunk) => myConnection && myConnection.send({
+                id, index, chunk, totalChunks: chunker.totalChunks, meta,
+                type: "file_transfer_chunk",
+            })
+        );
+    };
 
-    const sendFile = async ({ id, file, url, meta }) => {
-        const chunks = await getChunksFromFile(file);
-        setFileChunkIndex(null);
-        setData(null);
+    const sendFile = ({ id, file, url, meta }) => {
+        setData({
+            id,
+            url,
+            userRole: 'sender',
+            status: {
+                state: "processing",
+            },
+            meta
+        });
+        const chunker = new FileChunker({ file });
+        setFileChunkIndex(0);
         setFileToSend({
             id,
             url,
-            chunks,
+            totalChunks: chunker.totalChunks,
+            chunker,
             meta
         });
         // Send File Meta first
-        _startFileTransfer(id, chunks.length, meta)
+        _startFileTransfer(id, chunker.totalChunks, meta)
     };
 
     useEffect(() => {
         if (fileChunkIndex !== null) {
-            _sendFileChunk(fileToSend, fileChunkIndex);
-            setData((data) => { return {
-                ...fileToSend,
-                ...data,
-                userRole: 'sender',
-                status: { progress: (fileChunkIndex/fileToSend.chunks.length)*100, state: 'sending' }
-            }});
+            _sendFileChunk(fileToSend, fileChunkIndex).then(() => {
+                setData((data) => {
+                    return {
+                        ...fileToSend,
+                        ...data,
+                        userRole: 'sender',
+                        status: {progress: (fileChunkIndex / fileToSend.chunker.totalChunks) * 100, state: 'sending'}
+                    }
+                });
+            });
         }
     }, [fileChunkIndex]);
 
     const [file, setFile] = useState([]);
     const [chunk, setChunk] = useState(null);
 
-    const _sendFileReceipt = ({ id, meta }) => myConnection.send({ id, type: "file_receipt", meta });
-    const _requestForFileChunk = (id, index) => myConnection.send({ id, index, type: "file_chunk_request" });
+    const _sendFileReceipt = ({ id, meta }) => myConnection && myConnection.send({ id, type: "file_receipt", meta });
+    const _requestForFileChunk = (id, index) => myConnection && myConnection.send({ id, index, type: "file_chunk_request" });
 
     const [hasReceivedFile, setReceivedFile] = useState(false);
     useEffect(() => {
@@ -192,10 +206,7 @@ export default function usePeer() {
                 id: chunk.id,
                 meta,
                 userRole: 'receiver',
-                status: {
-                    state: 'receiving',
-                    progress: (receiveIndex/file.totalChunks)*100
-                }
+                status: { state: 'receiving', progress: (receiveIndex/file.totalChunks)*100 }
             });
             if(receiveIndex+1 < file.totalChunks)
                 _requestForFileChunk(file.id, receiveIndex+1);

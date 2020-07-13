@@ -78,5 +78,4 @@ export default ({ }) => {
         onConnect={(code) => connectToPeer(code)}
     />;
 
-
 }

@@ -34,7 +34,9 @@ const SaveButton = styled.button`
 
 export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, onSave }) => {
 
-    const renderStateText = state === 'queued' ? <span className="text-success font-weight-bold">Queued</span> :
+    const renderStateText =
+    state === 'processing' ? <span className="text-success font-weight-bold">Processing</span> :
+    state === 'queued' ? <span className="text-success font-weight-bold">Queued</span> :
     state === 'sent' ? <span className="text-success font-weight-bold">Sent</span> :
     state === 'received' ? <span className="text-success font-weight-bold">Received</span> :
     state === 'sending' ? <span className="text-success font-weight-bold">Sending {kbps && `at ${kbps} KB/s`}</span> :
