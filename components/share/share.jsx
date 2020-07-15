@@ -20,7 +20,7 @@ const ShareWindowContainer = styled.div`
 export default ({
     myCode, peerCode, currentFile, isTransferring,
     filesReceived: filesReceivedProps, filesSent: filesSentProps,
-    onSend, onDisconnect
+    onSend, onCancel, onDisconnect
 }) => {
 
     const [filesQueued, setFilesQueued] = useState([]);
@@ -77,6 +77,14 @@ export default ({
         return [];
     };
 
+    const handleCancel = (id) => {
+        if(currentFile.id === id) onCancel(id);
+        else {
+            const newQ = excludeFile({ id }, filesQueued);
+            setFilesQueued([...newQ]);
+        }
+    };
+
     return <React.Fragment>
         <Topbar />
         <ShareWindowContainer>
@@ -88,6 +96,7 @@ export default ({
                     <FileSelector
                         onSelect={handleOnSelect}
                         queue={getActiveQueue()}
+                        onCancel={handleCancel}
                     />
                 </div>
                 <div className="col-md-6 p-2">

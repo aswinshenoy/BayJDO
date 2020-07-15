@@ -52,8 +52,13 @@ export default ({ filesReceived, filesSent }) => {
     const sortFiles = (files) => files.sort((a, b) => (a.timestamp > b.timestamp) ? 1 : -1);
 
     return <FileSharedTabs>
-        <TabSelectorWrap>
+        <TabSelectorWrap role="tablist" aria-label="Files Received & Sent">
             <button
+                role="tab"
+                id="filesReceivedTab"
+                aria-selected={!showFilesSent}
+                aria-label="Show Files Received"
+                aria-controls="filesReceivedPanel"
                 className={classNames({'active': !showFilesSent}, "shadow")}
                 onClick={() => setShowFilesSent(false)}
             >
@@ -61,6 +66,11 @@ export default ({ filesReceived, filesSent }) => {
                 <div className="d-inline-block badge-light px-3 ml-2 shadow rounded">{filesReceivedCount}</div>
             </button>
             <button
+                role="tab"
+                id="filesSentTab"
+                aria-selected={showFilesSent}
+                aria-label="Show Files Sent"
+                aria-controls="filesSentPanel"
                 className={classNames({'active': showFilesSent}, "shadow")}
                 onClick={() => setShowFilesSent(true)}
             >
@@ -68,12 +78,16 @@ export default ({ filesReceived, filesSent }) => {
                 <div className="d-inline-block badge-light px-3 ml-2 shadow rounded">{filesSentCount}</div>
             </button>
         </TabSelectorWrap>
-        <TabContainer>
-            { showFilesSent ?
+        <TabContainer id="filesSentPanel" role="tabpanel" aria-labelledby="filesSentTab">
+            {showFilesSent &&
                 <FileLister
-                    labels={{ noFilesShared: "No files sent." }}
+                    labels={{noFilesShared: "No files sent."}}
                     files={filesSent ? sortFiles(filesSent) : []}
-                /> :
+                />
+            }
+        </TabContainer>
+        <TabContainer id="filesReceivedPanel" role="tabpanel" aria-labelledby="filesReceivedTab">
+        {!showFilesSent &&
                 <FileLister
                     showSaveButton
                     labels={{ noFilesShared: "No files received." }}
@@ -81,6 +95,5 @@ export default ({ filesReceived, filesSent }) => {
                 />
             }
         </TabContainer>
-
     </FileSharedTabs>
 }

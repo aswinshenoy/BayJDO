@@ -31,7 +31,11 @@ const defaultLabels = {
     noFilesShared: 'No Files Shared.'
 };
 
-export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
+export default ({
+    files: filesProp, labels: labelsProp,
+    showSaveButton, allowCancel,
+    onCancel,
+}) => {
 
     const [files, setFiles] = useState(filesProp);
 
@@ -46,8 +50,10 @@ export default ({ files: filesProp, labels: labelsProp, showSaveButton }) => {
     {files.map((f) =>
         <div key={f.id} className="p-2">
             <FileViewer
-                showSaveButton={showSaveButton}
                 fileData={f}
+                showSaveButton={showSaveButton}
+                showCancelButton={allowCancel}
+                onCancel={onCancel}
             />
         </div>
     )}

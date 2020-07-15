@@ -17,7 +17,7 @@ const FilePreviewContainer = styled.div`
   background: ${({progress}) => progress ? `linear-gradient(to right, rgba(118,255,3,0.4) ${progress}%, white ${progress}%)` : `white`};
 `;
 
-const SaveButton = styled.button`
+const FileActionButton = styled.button`
   background: transparent;;
   color: #007bff;
   border: 1.5px solid;
@@ -32,7 +32,12 @@ const SaveButton = styled.button`
   }
 `;
 
-export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, onSave }) => {
+export default ({
+    url, status: { progress, state, kbps }, meta,
+    showSaveButton, showCancelButton,
+    onSave, onCancel
+}) => {
+
 
     const renderStateText =
     state === 'processing' ? <span className="text-success font-weight-bold">Processing</span> :
@@ -45,7 +50,7 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
     <span className="text-danger font-weight-bold"> Unknown Error </span>;
 
     const renderSaveButton = showSaveButton ?
-    <SaveButton
+    <FileActionButton
         role="button"
         title="Save to Device"
         aria-label="Save File to Device"
@@ -53,7 +58,19 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
     >
         <i  className="gg-software-download" />
         <span className="pl-1">Save</span>
-    </SaveButton>
+    </FileActionButton>
+    : null;
+
+    const renderCancelButton = showCancelButton ?
+    <FileActionButton
+        role="button"
+        title="Cancel Transfer"
+        aria-label="Cancel Transfer"
+        onClick={onCancel}
+    >
+        <i  className="gg-close" />
+        <span className="pl-1">Cancel</span>
+    </FileActionButton>
     : null;
 
     const isTransferred = state === 'received' || state === 'sent';
@@ -89,6 +106,7 @@ export default ({ url, status: { progress, state, kbps }, meta, showSaveButton, 
             </div>
             <div className="col-6 p-2 mx-0 align-items-center justify-content-end d-flex">
                 {renderSaveButton}
+                {renderCancelButton}
             </div>
         </div>
     </FilePreviewContainer>

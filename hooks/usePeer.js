@@ -114,24 +114,22 @@ export default function usePeer() {
     });
     const _sendFileChunk = async ({ id, meta, chunker }, index) => {
         chunker.nextChunk().then((chunk) => myConnection && myConnection.send({
-                id, index, chunk, totalChunks: chunker.totalChunks, meta,
-                type: "file_transfer_chunk",
-            })
-        );
+            id, index, chunk, totalChunks: chunker.totalChunks, meta,
+            type: "file_transfer_chunk",
+        }));
     };
+    const _cancelFileTransfer = (id) => myConnection.send({ id, type:"file_transfer_cancel" });
 
-    const sendFile = ({ id, file, url, meta }) => {
+    const transferFile = ({ id, file, url, meta }) => {
         setData({
             id,
             url,
             userRole: 'sender',
-            status: {
-                state: "processing",
-            },
+            status: { state: "processing", },
             meta
         });
         const chunker = new FileChunker({ file });
-        setFileChunkIndex(0);
+        setFileChunkIndex(null);
         setFileToSend({
             id,
             url,
@@ -140,7 +138,23 @@ export default function usePeer() {
             meta
         });
         // Send File Meta first
-        _startFileTransfer(id, chunker.totalChunks, meta)
+        _startFileTransfer(id, chunker.totalChunks, meta);
+    };
+
+    const resetTransfer = () => {
+        setFileChunkIndex(null);
+        setFileToSend(null);
+
+        setReceiveIndex(0);
+        setReceivedFile(null);
+        setFile(null);
+        setChunk(null);
+        setData(null);
+    };
+
+    const cancelTransfer = ({ id }) => {
+        _cancelFileTransfer(id);
+        resetTransfer();
     };
 
     useEffect(() => {
@@ -158,11 +172,13 @@ export default function usePeer() {
         }
     }, [fileChunkIndex]);
 
-    const [file, setFile] = useState([]);
+    const [file, setFile] = useState({});
     const [chunk, setChunk] = useState(null);
 
-    const _sendFileReceipt = ({ id, meta }) => myConnection && myConnection.send({ id, type: "file_receipt", meta });
-    const _requestForFileChunk = (id, index) => myConnection && myConnection.send({ id, index, type: "file_chunk_request" });
+    const _sendFileReceipt = ({ id, meta }) => (id && myConnection) &&
+        myConnection.send({ id, type: "file_receipt", meta });
+    const _requestForFileChunk = (id, index) => (id && myConnection) &&
+        myConnection.send({ id, index, type: "file_chunk_request" });
 
     const [hasReceivedFile, setReceivedFile] = useState(false);
     useEffect(() => {
@@ -189,8 +205,8 @@ export default function usePeer() {
     // handle requesting & receiving file
     useEffect(() => {
         if(chunk === false)
-            _requestForFileChunk(file.id, receiveIndex);
-        else if(chunk) {
+            _requestForFileChunk(file && file.id, receiveIndex);
+        else if(chunk && file) {
             let dataChunks = [];
             if(file && file.chunks)
                 dataChunks = [...file.chunks];
@@ -206,7 +222,10 @@ export default function usePeer() {
                 id: chunk.id,
                 meta,
                 userRole: 'receiver',
-                status: { state: 'receiving', progress: (receiveIndex/file.totalChunks)*100 }
+                status: {
+                    state: 'receiving',
+                    progress: (file && file.totalChunks ? (receiveIndex/file.totalChunks)*100 : 0)
+                }
             });
             if(receiveIndex+1 < file.totalChunks)
                 _requestForFileChunk(file.id, receiveIndex+1);
@@ -219,7 +238,6 @@ export default function usePeer() {
     const handleReceiveNewFile = (file) => {
         setReceivedFile(false);
         setReceiveIndex(0);
-        setChunk(false);
         setFile( {
             id: file.id,
             meta: file.meta,
@@ -228,6 +246,12 @@ export default function usePeer() {
             totalChunks: file.totalChunks,
             complete: false,
         });
+        setChunk(false);
+    };
+
+    const handleCancelTransfer = () => {
+        throwToast("error", `File transfer cancelled`);
+        resetTransfer();
     };
 
     const handleReceiveData = (data) => {
@@ -236,6 +260,8 @@ export default function usePeer() {
             // receive new file
             if(data.type === 'file_transfer_start')
                 handleReceiveNewFile(data);
+            if(data.type === 'file_transfer_cancel')
+                handleCancelTransfer(data);
             // process request for the next chunk
             else if(data.type === 'file_chunk_request')
                 setFileChunkIndex(data.index);
@@ -263,13 +289,14 @@ export default function usePeer() {
         }
     };
 
-    return [
+    return [{
         myself,
         myPeer,
         data,
+        isConnected,
         connectToPeer,
-        sendFile,
         disconnect,
-        isConnected
-    ];
+        transferFile,
+        cancelTransfer,
+    }];
 }

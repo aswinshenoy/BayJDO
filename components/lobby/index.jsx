@@ -7,15 +7,16 @@ import { FileShare } from '../share';
 
 
 export default ({ }) => {
-    const [
+    const [{
         myself,
         myPeer,
+        isConnected,
         data,
         connectToPeer,
-        sendFile,
         disconnect,
-        isConnected,
-    ] = usePeer();
+        transferFile,
+        cancelTransfer
+    }] = usePeer();
 
     // Files that were received by the user in the current session
     const [filesReceived, setFilesReceived] = useState([]);
@@ -41,6 +42,10 @@ export default ({ }) => {
             if(data.status.state === 'received')
                 setFilesReceived(filesReceived.length > 0 ? [...filesReceived, data] : [data]);
         }
+        // if the data is null, its likely that the transfer has been cancelled.
+        else if (data == null){
+            setCurrentFile(null);
+        }
     }, [data]);
 
 
@@ -48,9 +53,16 @@ export default ({ }) => {
         if (!isFileTransferring(currentFile))
         {
             setCurrentFile(file);
-            sendFile(file)
+            transferFile(file)
         } else {
             console.log('already sending');
+        }
+    };
+
+    const handleCancel = (id) => {
+        if(isFileTransferring(currentFile)) {
+            setCurrentFile(null);
+            cancelTransfer(id);
         }
     };
 
@@ -70,6 +82,7 @@ export default ({ }) => {
         filesReceived={filesReceived}
         filesSent={filesSent}
         onSend={handleSend}
+        onCancel={handleCancel}
         onDisconnect={handleDisconnect}
     /> :
     <LandingPage

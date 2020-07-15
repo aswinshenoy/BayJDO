@@ -39,7 +39,7 @@ const FooterFileSelector = styled.div`
   }
 `;
 
-export default ({ onSelect, queue }) => {
+export default ({ queue, onSelect, onCancel }) => {
 
     const getFileURL = (file) => {
         const fileSize = file.size / (1024 * 1024);
@@ -125,7 +125,12 @@ export default ({ onSelect, queue }) => {
                 <span className="bg-warning rounded px-3 shadow">{queue && queue.length > 0 ? queue.length : 0}</span>
             </h4>
             <div className="bg-light rounded p-2">
-                <FileLister files={queue} labels={{ noFilesShared: "No files pending." }} />
+                <FileLister
+                    files={queue}
+                    allowCancel
+                    onCancel={onCancel}
+                    labels={{ noFilesShared: "No files pending." }}
+                />
             </div>
         </div>
     </FileSelectorWrap>;

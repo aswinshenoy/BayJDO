@@ -25,9 +25,9 @@ Ashwin Shenoy
 ```
 
 ### 🔥 Features
-* ✅ **Light** - The lightest file-transfer app you would find!
-* ✅ **Fast** - Theoretically, as fast as your WiFi is!
-* ✅ **Secure** - P2P WebRTC-based File-Transfer
+* ✅ **Light** - Lightweight Progressive Web App that runs on your favorite browser!
+* ✅ **Fast** - Does not use your internet too!
+* ✅ **Secure** - P2P WebRTC-based End-to-End Encrypted File-Transfer
 * ❌ **No Special Hotspot** - Works with any existing hotspot or network between devices.
 * ❌ **No App Install** - Works on any device with a modern web browser.
 * ❌ **No Non-Sense** - Open Source, No Ads, No User Info Asked/Stored

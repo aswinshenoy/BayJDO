@@ -2,7 +2,7 @@ import React from 'react';
 
 import { FilePreview } from '../../views/'
 
-export default ({ fileData, showSaveButton, }) => {
+export default ({ fileData, showSaveButton, showCancelButton, onCancel }) => {
 
     const handleDownload = () => {
         const tempLink = document.createElement('a');
@@ -16,6 +16,8 @@ export default ({ fileData, showSaveButton, }) => {
             {...fileData}
             onSave={handleDownload}
             showSaveButton={showSaveButton}
+            showCancelButton={showCancelButton}
+            onCancel={() => onCancel(fileData.id)}
         />
         : <div>
             <div>File Damaged. Ask to Resend</div>
