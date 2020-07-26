@@ -65,34 +65,65 @@ Being an open source project, any sort of contributions - pull requests, bug rep
 feature request, documentation help are all welcomed.
 
 #### 🛠 How to Run Locally & Develop ?
-To run and develop using docker-compose, you may use the following configuration 
-in you `docker-compose.yml` -
+1. Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/).
+   If you installed Docker desktop for Windows or Mac you don't need to install docker-compose separately.
+2. Clone this repository and rename the folder to **webapp**. Create file **docker-compose.yml** outside this folder.
+   
+   You directory structure should appear as follows:
+   ```bash
+    my-project
+    ├── docker-compose.yml
+    └── webapp
+   ```
+3. Edit file **docker-compose.yml** to add the following:
+   ```yaml
+   version: '3.6'
+   services:
+     bayjdo_server:
+       container_name: bayjdo_server
+       image: peerjs/peerjs-server
+       ports:
+         - 9000:9000
+     bayjdo_webapp:
+       container_name: bayjdo_webapp
+       image: webapp
+       ports:
+         - 3000:3000
+       environment:
+         - PORT=3000
+       volumes:
+         - ./webapp:/app
+         - /app/node_modules
+         - /app/.next
+       build:
+         context: webapp
+         dockerfile: Dockerfile-Dev
+       command:
+         "npm run dev"
+   ```
+4. Modify property ***host*** of object **prodConfig** in *hooks/usePeer.js* to "localhost". Also modify the property ***port*** to "9000".
+   
+   Your prodConfig should look like:
+   ```js
+    const prodConfig = {
+      host: 'localhost', // or internal-ip
+      secure: true,
+      port: 9000,
+      path: '/signaller',
+      debug: 1
+    };
+   ```
 
-```shell
-version: '3.6'
-services:
-  bayjdo_server:
-    container_name: bayjdo_server
-    image: peerjs/peerjs-server
-    ports:
-      - 9000:9000
-  bayjdo_webapp:
-    container_name: bayjdo_webapp
-    image: webapp
-    ports:
-      - 3000:3000
-    environment:
-      - PORT=3000
-    volumes:
-      - ./webapp:/app
-      - /app/node_modules
-      - /app/.next
-    build:
-      context: webapp
-      dockerfile: Dockerfile-Dev
-    command:
-      "npm run dev"
-```
+   ⚠️ *If you wish to test the local install on another device you will need to use your internal ip-address instead of localhost.*
+  *If you are on a linux based system you can find your internal IP by issuing:*
+   ```console
+    hostname -I
+   ```
+5. Run the following command to launch the server:
+   ```console
+    sudo docker-compose up
+   ```
+6. Access the client at localhost:3000 (or internal-ip:3000 in other devices connected to the same network).
 
 #### 🌟 How to Contribute?
 1. Fork the repository, clone it locally and run it following the installation instruction above.
