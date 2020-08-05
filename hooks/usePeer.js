@@ -5,11 +5,11 @@ import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
-    host: '/',
-    secure: true,
-    port: 443,
-    path: '/signaller',
-    debug: 1
+    host: "10.0.0.7",
+    secure: false,
+    port: 9000,
+    path: '/myapp',
+    debug: 3 // Prefer max verbosity on development environment
 };
 
 // const prodConfig = {
