@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import { throwToast } from '../functions';
-
-import { getFileFromChunks, FileChunker } from '../functions';
+import { FileChunker } from '../functions';
 
 const prodConfig = {
     host: "10.0.0.5",
@@ -184,7 +183,12 @@ export default function usePeer() {
     useEffect(() => {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
-            const resp = getFileFromChunks(file.chunks, file.meta);
+            // const resp = getFileFromChunks(file.chunks, file.meta);
+            const resp = {
+                    url:"dang-we're-out-of-blobs",
+                    meta:file.meta,
+                    status: {progress: 100, state: 'received',}
+            };
             _sendFileReceipt(file);
             setData({
                 ...resp,
