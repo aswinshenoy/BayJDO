@@ -5,7 +5,7 @@ import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
-    host: "10.0.0.7",
+    host: "10.0.0.5",
     secure: false,
     port: 9000,
     path: '/myapp',
@@ -207,34 +207,55 @@ export default function usePeer() {
         if(chunk === false)
             _requestForFileChunk(file && file.id, receiveIndex);
         else if(chunk && file) {
-            let dataChunks = [];
-            if(file && file.chunks)
-                dataChunks = [...file.chunks];
-            dataChunks[chunk.index] = chunk.chunk;
-            const meta = chunk.meta ? chunk.meta : file.meta;
-            setFile({
-                ...file,
-                id: chunk.id,
-                chunks: dataChunks,
-                meta,
-            });
-            setData({
-                id: chunk.id,
-                meta,
-                userRole: 'receiver',
-                status: {
-                    state: 'receiving',
-                    progress: (file && file.totalChunks ? (receiveIndex/file.totalChunks)*100 : 0)
+            let _chunk = new Uint8Array(chunk.chunk);
+            writer.write(_chunk).then(() => {                
+                const meta = chunk.meta ? chunk.meta : file.meta;
+                setFile({
+                    ...file,
+                    id: chunk.id,
+                    meta,
+                });
+                setData({
+                    id: chunk.id,
+                    meta,
+                    userRole: 'receiver',
+                    status: {
+                        state: 'receiving',
+                        progress: (file && file.totalChunks ? (receiveIndex/file.totalChunks)*100 : 0)
+                    }
+                });
+                if(receiveIndex+1 < file.totalChunks)
+                    _requestForFileChunk(file.id, receiveIndex+1);
+                else {
+                   setReceivedFile(true);
+                   writer.close();
                 }
-            });
-            if(receiveIndex+1 < file.totalChunks)
-                _requestForFileChunk(file.id, receiveIndex+1);
-            else setReceivedFile(true);
-            setReceiveIndex(receiveIndex+1);
+                setReceiveIndex(receiveIndex+1);
+
+                // Release the references, sit back, and let the Garbage Collector do its job.
+                _chunk = null;
+                chunk.chunk = null;
+            }); 
+            
         }
     }, [chunk]);
 
 
+    const createChunkWriter = file => {
+        /* Because of SSR, ensure streamSaver is loaded on client side. On the server, window === undefined !!
+           StreamSaver.js internally uses window object. 
+        */
+        const streamSaver =  require("../functions/StreamSaver");
+   
+        /* Initialize a Write Stream so that we can send incoming chunks directly to the disk instead of
+           holding them in memory. 
+         */
+         window.writer = streamSaver.createWriteStream(file.meta.name, {size:file.meta.size}).getWriter();
+         
+         // Binding writer to window is akin to creating a global object. 
+         // Cannot use local variable since everything will reset when react redraws this component.
+     }
+     
     const handleReceiveNewFile = (file) => {
         setReceivedFile(false);
         setReceiveIndex(0);
@@ -247,6 +268,7 @@ export default function usePeer() {
             complete: false,
         });
         setChunk(false);
+        createChunkWriter(file); 
     };
 
     const handleCancelTransfer = () => {
