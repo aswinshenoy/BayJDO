@@ -8,7 +8,7 @@ const prodConfig = {
     secure: false,
     port: 9000,
     path: '/myapp',
-    debug: 0 // Prefer max verbosity on development environment
+    debug: 3 // Prefer max verbosity on development environment
 };
 
 // const prodConfig = {
