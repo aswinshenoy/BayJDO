@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
@@ -8,7 +8,7 @@ const prodConfig = {
     secure: false,
     port: 9000,
     path: '/myapp',
-    debug: 3 // Prefer max verbosity on development environment
+    debug: 0 // Prefer max verbosity on development environment
 };
 
 // const prodConfig = {
@@ -174,7 +174,7 @@ export default function usePeer() {
     const [file, setFile] = useState({});
     const [chunk, setChunk] = useState(null);
     const [useStream, setUseStream] = useState(false);
-  
+      
 
     const _sendFileReceipt = ({ id, meta }) => (id && myConnection) &&
         myConnection.send({ id, type: "file_receipt", meta });
@@ -213,12 +213,8 @@ export default function usePeer() {
         if(chunk === false)
             _requestForFileChunk(file && file.id, receiveIndex);
         else if(chunk && file) {
-            let dataChunks = false;
-            if(useStream)
-                writeWithStreams();
-            else 
-                dataChunks = storeInMemory();
-            handleAfterReceive(dataChunks);
+            getChunkProcessor()();
+            handleAfterReceive();
         }
     }, [chunk]);
 
@@ -236,17 +232,18 @@ export default function usePeer() {
         if(file && file.chunks)
             dataChunks = [...file.chunks];
         dataChunks[chunk.index] = chunk.chunk;
-        return dataChunks; 
-    };
-
-    const handleAfterReceive = dataChunks => {
-        const meta = chunk.meta ? chunk.meta : file.meta;
         setFile({
             ...file,
             id: chunk.id,
             ...(dataChunks && {chunks: dataChunks}),
-            meta
+            meta : chunk.meta ? chunk.meta : file.meta
         });
+    };
+
+    const getChunkProcessor = () => useStream? writeWithStreams : storeInMemory;
+
+    const handleAfterReceive = () => {
+        const meta = chunk.meta ? chunk.meta : file.meta;      
         setData({
             id: chunk.id,
             meta,
