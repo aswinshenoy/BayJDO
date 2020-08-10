@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
