@@ -11,13 +11,13 @@ const prodConfig = {
     debug: 1
 };
 
-// const prodConfig = {
-//     host: '192.168.43.88',
-//     secure: false,
-//     port: 9000,
-//     path: '/myapp',
-//     debug: 0
-// };
+/* const prodConfig = {
+     host: '10.0.0.9',
+     secure: false,
+     port: 9000,
+     path: '/myapp',
+     debug: 0
+ };*/
 
 const nameGeneratorConfig = {
     dictionaries: [adjectives, animals],
@@ -173,7 +173,7 @@ export default function usePeer() {
 
     const [file, setFile] = useState({});
     const [chunk, setChunk] = useState(null);
-    const [useStream, setUseStream] = useState(false);
+    const [useStream, setUseStream] = useState(null);
       
 
     const _sendFileReceipt = ({ id, meta }) => (id && myConnection) &&
@@ -192,6 +192,7 @@ export default function usePeer() {
             };
             const resp = useStream? temp : getFileFromChunks(file.chunks, file.meta);
             _sendFileReceipt(file);
+            setUseStream(null);
             setData({
                 ...resp,
                 id: file.id,
@@ -266,15 +267,14 @@ export default function usePeer() {
         /* Because of SSR, ensure streamSaver is loaded on client side. On the server, window === undefined !!
            StreamSaver.js uses window object internally. 
         */
-        const streamSaver =  require("../functions/StreamSaver");
+        const streamSaver =  require("streamsaver");
    
         /* Initialize a Write Stream so that we can send incoming chunks directly to the disk instead of
-           holding them in memory. 
-         */
-         window.writer = streamSaver.createWriteStream(file.meta.name, {size:file.meta.size}).getWriter();
-         
-         // Binding writer to window is akin to creating a global object. 
-         // Cannot use local variable since everything will reset when react redraws this component.
+          holding them in memory. 
+        */
+        window.writer = streamSaver.createWriteStream(file.meta.name, {size:file.meta.size}).getWriter();
+        // Binding writer to window is akin to creating a global object. 
+        // Cannot use local variable since everything will reset when react redraws this component.
      };
 
      useEffect(() => { 

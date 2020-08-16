@@ -71,6 +71,7 @@
     "shortid": "^2.2.15",
     "simple-sha1": "^3.0.1",
     "store2": "^2.11.1",
+    "streamsaver": "^2.0.4",
     "unique-names-generator": "^4.3.0",
     "universal-cookie": "^4.0.3"
   },
