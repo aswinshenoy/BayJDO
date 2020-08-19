@@ -80,8 +80,10 @@ export default ({
         if(type === 'audio') return <AudioPreview isTransferred={isTransferred} url={url} meta={meta} />;
         if(type === 'video') return <VideoPreview isTransferred={isTransferred} url={url} meta={meta} />;
         if(type === 'image') return <ImagePreview url={url} meta={meta} />;
-        return <FilePreview url={url} meta={meta} />
+        renderTitle();
     };
+
+    const renderTitle = () => <FilePreview url={url} meta={meta} />
 
     const renderTransferSize = () => {
         if(meta && meta.size) {
@@ -96,7 +98,7 @@ export default ({
         progress={(state === 'sending' || state === 'receiving' )? progress : null}
         className="shadow"
     >
-        {useStream? null : renderPreview()}
+        {useStream? renderTitle() : renderPreview()}
         <div className="row mx-0 mt-2 w-100">
             <div className="col p-2 d-flex align-items-center">
                 <div>
