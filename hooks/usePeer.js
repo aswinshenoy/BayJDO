@@ -173,7 +173,6 @@ export default function usePeer() {
 
     const [file, setFile] = useState({});
     const [chunk, setChunk] = useState(null);
-    const [useStream, setUseStream] = useState(null);
       
 
     const _sendFileReceipt = ({ id, meta }) => (id && myConnection) &&
@@ -190,9 +189,9 @@ export default function usePeer() {
                     meta:file.meta,
                     status: {progress: 100, state: 'received',}
             };
-            const resp = useStream? temp : getFileFromChunks(file.chunks, file.meta);
+            const resp = file.useStream? temp : getFileFromChunks(file.chunks, file.meta);
             _sendFileReceipt(file);
-            setUseStream(null);
+            setFile({useStream: null});
             setData({
                 ...resp,
                 id: file.id,
@@ -221,7 +220,7 @@ export default function usePeer() {
 
     const writeWithStreams = () => {
         let _chunk = new Uint8Array(chunk.chunk);
-        writer.write(_chunk).then(() => {                
+        writer.write(_chunk).then(() => {
             // Release the references, sit back, and let the Garbage Collector do its job.
             _chunk = null;
             chunk.chunk = null;
@@ -241,7 +240,7 @@ export default function usePeer() {
         });
     };
 
-    const getChunkProcessor = () => useStream? writeWithStreams : storeInMemory;
+    const getChunkProcessor = () => file.useStream? writeWithStreams : storeInMemory;
 
     const handleAfterReceive = () => {
         const meta = chunk.meta ? chunk.meta : file.meta;      
@@ -258,7 +257,7 @@ export default function usePeer() {
             _requestForFileChunk(file.id, receiveIndex+1);
         else {
            setReceivedFile(true);
-           if(useStream) writer.close();
+           if(file.useStream) writer.close();
         }
         setReceiveIndex(receiveIndex+1);
     };
@@ -277,13 +276,13 @@ export default function usePeer() {
         // Cannot use local variable since everything will reset when react redraws this component.
      };
 
-     useEffect(() => { 
-         if(useStream) createChunkWriter(file); 
-        }, [useStream]);
-     
     const handleReceiveNewFile = (file) => {
         setReceivedFile(false);
         setReceiveIndex(0);
+        /* 
+        Conditionally switch to using WriteStream if file size > 50MB
+        */
+        const switchSize = 50 * 1024 * 1024;
         setFile( {
             id: file.id,
             meta: file.meta,
@@ -291,14 +290,16 @@ export default function usePeer() {
             chunks: [],
             totalChunks: file.totalChunks,
             complete: false,
+            useStream: file.meta.size > switchSize
         });
         setChunk(false);
-        /* 
-        Conditionally switch to using WriteStream if file size > 50MB
-        */
-        const switchSize = 50 * 1024 * 1024;
-        setUseStream(file.meta.size > switchSize);
     };
+
+    useEffect(() => {
+        if(file.useStream) {
+            createChunkWriter(file);
+        }
+    },[file.useStream]);
 
     const handleCancelTransfer = () => {
         throwToast("error", `File transfer cancelled`);
