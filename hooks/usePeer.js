@@ -201,6 +201,7 @@ export default function usePeer() {
                     state: 'received',
                 },
                 timestamp: new Date().getTime(),
+                useStream: file.useStream
             });
         }
     }, [hasReceivedFile]);
