@@ -33,7 +33,7 @@ const FileActionButton = styled.button`
 `;
 
 export default ({
-    url, status: { progress, state, kbps }, meta,
+    url, status: { progress, state, kbps }, meta, useStream,
     showSaveButton, showCancelButton,
     onSave, onCancel
 }) => {
@@ -96,7 +96,7 @@ export default ({
         progress={(state === 'sending' || state === 'receiving' )? progress : null}
         className="shadow"
     >
-        {renderPreview()}
+        {useStream? null : renderPreview()}
         <div className="row mx-0 mt-2 w-100">
             <div className="col p-2 d-flex align-items-center">
                 <div>
@@ -105,7 +105,7 @@ export default ({
                 </div>
             </div>
             <div className="col-6 p-2 mx-0 align-items-center justify-content-end d-flex">
-                {renderSaveButton}
+                {useStream? null : renderSaveButton}
                 {renderCancelButton}
             </div>
         </div>
