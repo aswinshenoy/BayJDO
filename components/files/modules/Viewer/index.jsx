@@ -11,7 +11,7 @@ export default ({ fileData, showSaveButton, showCancelButton, onCancel }) => {
         tempLink.click();
     };
 
-    return <div>{ console.log("File data is", fileData) || fileData ?
+    return <div>{fileData?
         <FilePreview
             {...fileData}
             onSave={handleDownload}
