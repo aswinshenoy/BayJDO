@@ -181,6 +181,7 @@ export default function usePeer() {
         myConnection.send({ id, index, type: "file_chunk_request" });
 
     const [hasReceivedFile, setReceivedFile] = useState(false);
+
     useEffect(() => {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
@@ -257,8 +258,8 @@ export default function usePeer() {
         if(receiveIndex+1 < file.totalChunks)
             _requestForFileChunk(file.id, receiveIndex+1);
         else {
-           setReceivedFile(true);
-           if(file.useStream) writer.close();
+            setReceivedFile(true);
+            if(file.useStream) writer.close();
         }
         setReceiveIndex(receiveIndex+1);
     };
@@ -284,6 +285,9 @@ export default function usePeer() {
         Conditionally switch to using WriteStream if file size > 50MB
         */
         const switchSize = 50 * 1024 * 1024;
+        const _useStream = file.meta.size > switchSize;
+
+        if(_useStream) createChunkWriter(file);
         setFile( {
             id: file.id,
             meta: file.meta,
@@ -291,16 +295,10 @@ export default function usePeer() {
             chunks: [],
             totalChunks: file.totalChunks,
             complete: false,
-            useStream: file.meta.size > switchSize
+            useStream: _useStream
         });
         setChunk(false);
     };
-
-    useEffect(() => {
-        if(file.useStream) {
-            createChunkWriter(file);
-        }
-    },[file.useStream]);
 
     const handleCancelTransfer = () => {
         throwToast("error", `File transfer cancelled`);
