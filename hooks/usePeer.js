@@ -160,7 +160,7 @@ export default function usePeer() {
     };
 
     useEffect(() => {
-        if (fileChunkIndex !== null) {
+        if (fileChunkIndex !== null && fileToSend !== null) {
             _sendFileChunk(fileToSend, fileChunkIndex).then(() => {
                 setData((data) => {
                     return {
