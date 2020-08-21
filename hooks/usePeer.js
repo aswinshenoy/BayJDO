@@ -188,11 +188,14 @@ export default function usePeer() {
     useEffect(() => {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
-            const temp = {
+            const resp = {
                     meta:file.meta,
-                    status: {progress: 100, state: 'received',}
+                    status: {
+                        progress: 100, 
+                        state: 'received',
+                    },
+                    ...(!file.useStream && getFileFromChunks(file.chunks, file.meta))
             };
-            const resp = file.useStream? temp : getFileFromChunks(file.chunks, file.meta);
             _sendFileReceipt(file);
             setData({
                 ...resp,
