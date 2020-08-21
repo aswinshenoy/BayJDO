@@ -140,10 +140,13 @@ export default function usePeer() {
         _startFileTransfer(id, chunker.totalChunks, meta);
     };
 
+    const stopDownload = () => window.writer.abort();
+
     const resetTransfer = () => {
+        // Stop download if StreamSaver is used
+        if(window.writer) stopDownload();
         setFileChunkIndex(null);
         setFileToSend(null);
-
         setReceiveIndex(0);
         setReceivedFile(null);
         setFile(null);
@@ -192,7 +195,6 @@ export default function usePeer() {
             };
             const resp = file.useStream? temp : getFileFromChunks(file.chunks, file.meta);
             _sendFileReceipt(file);
-            setFile({useStream: null});
             setData({
                 ...resp,
                 id: file.id,
@@ -276,6 +278,9 @@ export default function usePeer() {
         window.writer = streamSaver.createWriteStream(file.meta.name, {size:file.meta.size}).getWriter();
         // Binding writer to window is akin to creating a global object. 
         // Cannot use local variable since everything will reset when react redraws this component.
+
+        // Ensure that download is cancelled if user abruptly closes the window
+        window.onunload = () => stopDownload();
      };
 
     const handleReceiveNewFile = (file) => {
@@ -288,6 +293,7 @@ export default function usePeer() {
         const _useStream = file.meta.size > switchSize;
 
         if(_useStream) createChunkWriter(file);
+
         setFile( {
             id: file.id,
             meta: file.meta,
