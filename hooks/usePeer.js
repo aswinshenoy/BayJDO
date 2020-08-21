@@ -189,7 +189,6 @@ export default function usePeer() {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
             const temp = {
-                    url:"dang-we're-out-of-blobs",
                     meta:file.meta,
                     status: {progress: 100, state: 'received',}
             };
