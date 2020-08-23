@@ -6,23 +6,6 @@
 
 ![BayJDO App](https://repository-images.githubusercontent.com/277010180/676eba80-bdbd-11ea-900a-108fc56a631c)
 
-#### !!  NOT AN ORIGINAL IDEA. JUST A SIMPLE IMPLEMENTATION
-```
-To whomsoever it may concern,
-
-- Neither the idea for this project, nor the technology used, were conceived originally
-by the me (there is no invention of anything).  
-- In fact, the project is somewhat still a basic & simple implementation of the 
-already-popular technology in-use.
-- I am no expert in the field, but only a learner trying to experiment with it.
-- I do not claim any credit for the idea, & have always maintained & acknowledged the 
-inspirations for the project (you can find as well as use them, I have mention them below 
-in the inspiration section).
-- I am open to any constructive criticism, and welcome any corrections / contributions.
-
-Cheers,
-Ashwin Shenoy
-```
 
 ### 🔥 Features
 * ✅ **Light** - Lightweight Progressive Web App that runs on your favorite browser!
@@ -42,9 +25,9 @@ Ashwin Shenoy
 #### 💬 Frequently Asked Questions
 
 ##### What technology does it use?
-The app is completely based on web-technologies and runs on any modern web browser.
+The app uses web-technologies and runs on any modern web browser.
 For establishing the connection between two devices, a WebRTC signalling server 
-(PeerJS) is used. This server is however not involved in the data transfer process.
+(PeerJS) is used. This server, however, is not involved in the data transfer process.
 
 ##### How is privacy ensured? 🙈
 All files being transmitted get encrypted by WebRTC standards, no one except the two
@@ -131,7 +114,7 @@ feature request, documentation help are all welcomed.
 3. Work on the patch or feature, test it and send a pull request referencing the issue.
 
 ###  🛑 Disclaimer
-This project is only being developed, as a hobby project and does not intend to
+This project is currently only being developed, as a hobby project and does not intend to
 replace any popular file transfer application. The implementation of this project is
 currently very basic, and intends only to be a proof of concept for the technology used.
 This app may have technical glitches, security & privacy vulnerabilities. 
@@ -142,15 +125,16 @@ elsewhere for now.
 Neither the idea for this project, nor the technology used, were conceived originally
 by me. This project only differs in implementations (+ some minor features), from
 some of the following popular projects it was inspired from -
+
 1. https://github.com/cowbell/sharedrop / https://www.sharedrop.io/
 2. https://github.com/RobinLinus/snapdrop / https://snapdrop.net/
 
 
 ### ✒️ License
-This project repository is licensed under GNU General Public License V3. 
+This project is licensed under the GNU General Public License V3. 
 
 #### Credits
 1. Icons / illustrations - https://icons8.com/, https://icons8.com/ouch
 
 ----
-Developed with ♥ by Ashwin Shenoy.
+Developed with ♥ by Ashwin Shenoy & other Open Source Contributors.
