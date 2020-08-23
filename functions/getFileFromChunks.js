@@ -6,12 +6,5 @@ export default function getFileFromChunks (chunks, meta) {
     });
     const blob = new Blob(blobParts,  { type: meta.type });
     const url = URL.createObjectURL(blob);
-    return {
-        url,
-        meta,
-        status: {
-            progress: 100,
-            state: 'received',
-        }
-    }
+    return {url};
 };

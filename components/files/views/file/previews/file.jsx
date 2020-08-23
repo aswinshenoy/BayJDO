@@ -2,7 +2,7 @@ import React from 'react';
 
 import { getFileIconFromMIME } from "../../../../../functions";
 
-export default ({ meta: { name, size, type }, }) => {
+export default ({ meta: { name, type }, }) => {
 
     return <div>
         <div className="row mx-0">

@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { uniqueNamesGenerator, adjectives, animals } from 'unique-names-generator';
 import { throwToast } from '../functions';
-
 import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
-    host: '/',
+    host: 'bayjdo.com',
     secure: true,
     port: 443,
     path: '/signaller',
     debug: 1
 };
 
-// const prodConfig = {
-//     host: '192.168.43.88',
-//     secure: false,
-//     port: 9000,
-//     path: '/myapp',
-//     debug: 0
-// };
+/* const prodConfig = {
+     host: '10.0.0.9',
+     secure: false,
+     port: 9000,
+     path: '/myapp',
+     debug: 0
+ };*/
 
 const nameGeneratorConfig = {
     dictionaries: [adjectives, animals],
@@ -141,10 +140,13 @@ export default function usePeer() {
         _startFileTransfer(id, chunker.totalChunks, meta);
     };
 
+    const stopDownload = () => window.writer.abort();
+
     const resetTransfer = () => {
+        // Stop download if StreamSaver is used
+        if(window.writer) stopDownload();
         setFileChunkIndex(null);
         setFileToSend(null);
-
         setReceiveIndex(0);
         setReceivedFile(null);
         setFile(null);
@@ -158,7 +160,7 @@ export default function usePeer() {
     };
 
     useEffect(() => {
-        if (fileChunkIndex !== null) {
+        if (fileChunkIndex !== null && fileToSend !== null) {
             _sendFileChunk(fileToSend, fileChunkIndex).then(() => {
                 setData((data) => {
                     return {
@@ -174,6 +176,7 @@ export default function usePeer() {
 
     const [file, setFile] = useState({});
     const [chunk, setChunk] = useState(null);
+      
 
     const _sendFileReceipt = ({ id, meta }) => (id && myConnection) &&
         myConnection.send({ id, type: "file_receipt", meta });
@@ -181,10 +184,18 @@ export default function usePeer() {
         myConnection.send({ id, index, type: "file_chunk_request" });
 
     const [hasReceivedFile, setReceivedFile] = useState(false);
+
     useEffect(() => {
         if(hasReceivedFile && file && file.chunks && file.meta)
         {
-            const resp = getFileFromChunks(file.chunks, file.meta);
+            const resp = {
+                    meta:file.meta,
+                    status: {
+                        progress: 100, 
+                        state: 'received',
+                    },
+                    ...(!file.useStream && getFileFromChunks(file.chunks, file.meta))
+            };
             _sendFileReceipt(file);
             setData({
                 ...resp,
@@ -195,6 +206,7 @@ export default function usePeer() {
                     state: 'received',
                 },
                 timestamp: new Date().getTime(),
+                useStream: file.useStream
             });
         }
     }, [hasReceivedFile]);
@@ -207,37 +219,83 @@ export default function usePeer() {
         if(chunk === false)
             _requestForFileChunk(file && file.id, receiveIndex);
         else if(chunk && file) {
-            let dataChunks = [];
-            if(file && file.chunks)
-                dataChunks = [...file.chunks];
-            dataChunks[chunk.index] = chunk.chunk;
-            const meta = chunk.meta ? chunk.meta : file.meta;
-            setFile({
-                ...file,
-                id: chunk.id,
-                chunks: dataChunks,
-                meta,
-            });
-            setData({
-                id: chunk.id,
-                meta,
-                userRole: 'receiver',
-                status: {
-                    state: 'receiving',
-                    progress: (file && file.totalChunks ? (receiveIndex/file.totalChunks)*100 : 0)
-                }
-            });
-            if(receiveIndex+1 < file.totalChunks)
-                _requestForFileChunk(file.id, receiveIndex+1);
-            else setReceivedFile(true);
-            setReceiveIndex(receiveIndex+1);
+            getChunkProcessor()();
+            handleAfterReceive();
         }
     }, [chunk]);
 
+    const writeWithStreams = () => {
+        let _chunk = new Uint8Array(chunk.chunk);
+        writer.write(_chunk).then(() => {
+            // Release the references, sit back, and let the Garbage Collector do its job.
+            _chunk = null;
+            chunk.chunk = null;
+        }); 
+    };
+
+    const storeInMemory = () => {
+        let dataChunks = [];
+        if(file && file.chunks)
+            dataChunks = [...file.chunks];
+        dataChunks[chunk.index] = chunk.chunk;
+        setFile({
+            ...file,
+            id: chunk.id,
+            ...(dataChunks && {chunks: dataChunks}),
+            meta : chunk.meta ? chunk.meta : file.meta
+        });
+    };
+
+    const getChunkProcessor = () => file.useStream? writeWithStreams : storeInMemory;
+
+    const handleAfterReceive = () => {
+        const meta = chunk.meta ? chunk.meta : file.meta;      
+        setData({
+            id: chunk.id,
+            meta,
+            userRole: 'receiver',
+            status: {
+                state: 'receiving',
+                progress: (file && file.totalChunks ? (receiveIndex/file.totalChunks)*100 : 0)
+            }
+        });
+        if(receiveIndex+1 < file.totalChunks)
+            _requestForFileChunk(file.id, receiveIndex+1);
+        else {
+            setReceivedFile(true);
+            if(file.useStream) writer.close();
+        }
+        setReceiveIndex(receiveIndex+1);
+    };
+
+    const createChunkWriter = file => {
+        /* Because of SSR, ensure streamSaver is loaded on client side. On the server, window === undefined !!
+           StreamSaver.js uses window object internally. 
+        */
+        const streamSaver =  require("streamsaver");
+   
+        /* Initialize a Write Stream so that we can send incoming chunks directly to the disk instead of
+          holding them in memory. 
+        */
+        window.writer = streamSaver.createWriteStream(file.meta.name, {size:file.meta.size}).getWriter();
+        // Binding writer to window is akin to creating a global object. 
+        // Cannot use local variable since everything will reset when react redraws this component.
+
+        // Ensure that download is cancelled if user abruptly closes the window
+        window.onunload = () => stopDownload();
+     };
 
     const handleReceiveNewFile = (file) => {
         setReceivedFile(false);
         setReceiveIndex(0);
+        /* 
+        Conditionally switch to using WriteStream if file size > 50MB
+        */
+        const switchSize = 50 * 1024 * 1024;
+        const _useStream = file.meta.size > switchSize;
+
+        if(_useStream) createChunkWriter(file);
+
         setFile( {
             id: file.id,
             meta: file.meta,
@@ -245,6 +303,7 @@ export default function usePeer() {
             chunks: [],
             totalChunks: file.totalChunks,
             complete: false,
+            useStream: _useStream
         });
         setChunk(false);
     };
