@@ -1,33 +1,24 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { keyframes } from '@emotion/core'
 
 import { Topbar } from "../../common";
 import {PeerConnector} from "../../connect";
 import { PopUp } from "../../ui";
-
-const gradientBg = keyframes`
-  0% { background-position: 50% 0; }
-  100% { background-position: 100% 0; }
-`;
 
 const CoverWrapper = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vmin;
-  background-color: white;
+  background-color: #6200EA;
+  color: white;
   padding: 2vh 5vw;
   h1 {
     font-weight: 600;
     font-size: calc(1.5rem + 2vmax);
     max-width: 700px;
     line-height: 1.15;
-    background: linear-gradient(to right, #C51162, #304FFE, #00BFA5);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 500%;
-    animation: ${gradientBg} 8s ease infinite alternate-reverse;
+    color: #FFD600;
     text-shadow: 1px 1.2px 8px rgba(0,0,0,0.15);
   }
   h5 {
@@ -80,13 +71,13 @@ export default ({ myCode, isLoading, onConnect }) => {
                                 </p>
                             </div> :
                             <React.Fragment>
-                                <div className="d-none d-md-block">
+                                <div className="d-none text-dark text-center d-md-block">
                                     <PeerConnector
                                         isLoading={isLoading}
                                         myCode={myCode}
                                         onConnect={onConnect}
                                     />
-                                    <p className="mt-1 text-center p-4">
+                                    <p className="mt-1 text-light text-center p-4">
                                         If you face any issue with connecting with your peer, try reloading the pages
                                         to generate a new code for each of you.
                                     </p>
@@ -95,7 +86,7 @@ export default ({ myCode, isLoading, onConnect }) => {
                                     <button
                                         aria-label="Start Transferring"
                                         title="Start Transferring"
-                                        className="btn btn-primary rounded-pill shadow-lg mt-5 font-weight-bold p-4"
+                                        className="btn btn-light text-primary rounded-pill shadow-lg mt-5 font-weight-bold px-4 py-3"
                                         style={{ fontSize: '1.2rem' }}
                                         onClick={() => setShowConnector(true)}
                                     >

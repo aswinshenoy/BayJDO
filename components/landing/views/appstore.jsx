@@ -25,9 +25,10 @@ const AppStoreSectionContainer = styled.section`
   a {
     background: linear-gradient(to right, #396afc, #2948ff);
     color: white;
-    padding: 0.75rem 1.25rem;
-    font-size: 1.2rem;
+    padding: 1rem 2rem;
+    font-size: 1.3rem;
     margin-top: 1rem;
+    font-weight: 900;
     border-radius: 0.5rem;
     display: inline-block;
     text-decoration: none!important;
@@ -42,7 +43,7 @@ export default ({ }) => {
             <h2>Not Available on the <span className="d-inline-block">Google Playstore & App Store.</span></h2>
             <p>
                 <span className="mb-3">
-                    Yes! You read it right.
+                    Yes! You read that right.
                 </span>
                 Bayjdo is not available on your app store, and we
                 don't plan to put it there. You can access it anytime from your browser,
@@ -50,6 +51,7 @@ export default ({ }) => {
                 have to take the pain of downloading, updating and losing storage space
                 for the app.
             </p>
+            <p>You can still install BayJDO as PWA on your device for easier-access.</p>
             <a href="/install">Install Now</a>
         </div>
     </AppStoreSectionContainer>

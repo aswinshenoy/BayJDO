@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 
 const FooterInfoListContainer = styled.div`
   min-height: 20vh;
-  background-color: #EAEAEA;
+  background-color: #EEEEEE;
   width: 100%;
   display: flex;
   align-items: center;
@@ -12,18 +12,21 @@ const FooterInfoListContainer = styled.div`
   justify-content: center;
   padding: 5vh 0;
   .col-6 {
+    transition: all 0.5s;
     &:hover {
       color: #218838;
-      transition: all 0.25s;
+      transition: all 0.5s;
       img {
-        width: 38px;
-        transition: all 0.25s;
+        width: 64px;
+        transition: all 0.5s;
+        margin-bottom: 1rem;
       }
     }
   }
   img {
-    width: 36px;
-    margin-bottom: 1rem;
+    width: 50px;
+    margin-bottom: calc(1rem + 14px);
+    transition: all 0.5s;
   }
   h5 {
     text-align: center;
@@ -122,7 +125,7 @@ export default ({ hideInfoList }) => {
                 <a
                     aria-label="Made by Ashwin Shenoy, click to his website"
                     title="Made by Ashwin Shenoy"
-                    href="https://aswinshenoy.com/"
+                    href="https://twitter.com/aswinshenoy_"
                     target="_blank"
                     role="button"
                 >

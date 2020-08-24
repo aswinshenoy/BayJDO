@@ -4,10 +4,10 @@ import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
-    host: 'bayjdo.com',
+    host: 'squadegy.com',
     secure: true,
     port: 443,
-    path: '/signaller',
+    path: '/bayjdo',
     debug: 1
 };
 

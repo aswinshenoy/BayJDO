@@ -3,7 +3,7 @@ import shortid from 'shortid';
 import styled from '@emotion/styled';
 
 const PressReportsContainer = styled.section`
-  background-color: #ddd;
+  background-color: #F5F5F5;
   padding: 2.5vh 5vw;
   h3 {
     text-align: center;
@@ -12,8 +12,9 @@ const PressReportsContainer = styled.section`
     font-size: calc(1.4rem + 0.5vw);
   }
   img {
-    max-height: 40px;
-    filter: saturate(0);
+    width: 180px;
+    max-width: 100%;
+    filter: saturate(0.8);
     &:hover {
       filter: none;
     }
@@ -26,7 +27,17 @@ export default ({ }) => {
         {
             "publisher": "Amrita Vishwa Vidyapeetam",
             "logo": require('../../../images/logos/amrita.png'),
-            "url": "https://twitter.com/AMRITAedu/status/1280067292894605312",
+            "url": "https://www.amrita.edu/news/amrita-student-develops-bayjdo-indian-app-beat-xender-and-shareit-ban",
+        },
+        {
+            "publisher": "The Hindu",
+            "logo": require('../../../images/logos/the_hindu.png'),
+            "url": "https://www.thehindu.com/news/national/kerala/share-it-with-this-desi-application/article32133173.ece"
+        },
+        {
+            "publisher": "The New Indian Express",
+            "logo": require('../../../images/logos/the_new_indian_express.png'),
+            "url": "https://www.newindianexpress.com/cities/kochi/2020/jul/10/student-develops-app-to-replace-xender-shareit-2167618.html"
         },
         {
             "publisher": "Manorama Online",
@@ -48,14 +59,18 @@ export default ({ }) => {
     return <PressReportsContainer>
         <div className="row mx-0">
             <div className="col-md-3 d-flex align-items-center justify-content-center p-1">
-                <h3>In the News</h3>
+                <div>
+                    <h3 className="font-weight-bold text-uppercase mb-1">In the News</h3>
+                    <div className="small text-center">Click to view the articles.</div>
+                </div>
+
             </div>
             <div className="col px-0">
                 <div className="row mx-0">
                     { PressReports.map((i) =>
                         <div
                             key={shortid.generate()}
-                            className="col-6 col-md-3 d-flex align-items-center justify-content-center p-3"
+                            className="col-6 col-md-4 d-flex align-items-center justify-content-center p-3"
                         >
                             <a
                                 title={`View news on ${i.publisher}`}
