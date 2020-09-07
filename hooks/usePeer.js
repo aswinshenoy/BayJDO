@@ -4,7 +4,7 @@ import { throwToast } from '../functions';
 import { getFileFromChunks, FileChunker } from '../functions';
 
 const prodConfig = {
-    host: 'squadegy.com',
+    host: 'picklst.com',
     secure: true,
     port: 443,
     path: '/bayjdo',

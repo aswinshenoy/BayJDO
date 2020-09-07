@@ -64,7 +64,7 @@ export default ({ myCode, isLoading, onConnect }) => {
                 <div className="col-md-6 col-lg-4 px-2">
                     <div>
                         { isLoading ?
-                            <div className="alert-warning p-2 my-4">
+                            <div className="alert-warning rounded p-2 my-4">
                                 <div className="h4">Establishing Connection with Server</div>
                                 <p>
                                     Please wait. If its taking longer than usual, it may be due to server over-load.
